@@ -12,26 +12,26 @@ import Foundation
 //function
 func InitData(){
     let c1 = Customer(Name:"Sissi", Age:22 ,Address:"360 Huntington Ave, Boston, MA, 02215", Email:"871513123@qq.com")
-    //    let c2 = Customer(Name:"Jesse", Address:"24 Westland Ave, Boston, MA, 02115", IdNumber:"185492341", phoneNumber: 234762891)
-    //    let c3 = Customer(Name:"Walt", Address:"32 Boylston Street, Boston, MA, 02115", IdNumber:"534351235", phoneNumber: 234764478)
-    //    let c4 = Customer(Name:"Tatoo", Address:"10 Brookline Ave, Boston, MA, 02115", IdNumber:"623245232", phoneNumber: 126374892)
-    //    let c5 = Customer(Name:"Walt", Address:"48 Westland Ave, Boston, MA, 02115", IdNumber:"693438238", phoneNumber: 263784567)
+    let c2 = Customer(Name:"Nancy", Age:18 ,Address:"360 Huntington Ave, Boston, MA, 02215", Email:"nancy@gmail.com")
+    let c3 = Customer(Name:"Lily", Age:12 ,Address:"360 Huntington Ave, Boston, MA, 02215", Email:"lily@163.com")
+    let c4 = Customer(Name:"Sue", Age:29 ,Address:"360 Huntington Ave, Boston, MA, 02215", Email:"sue@gmail.com")
+    let c5 = Customer(Name:"Susan", Age:32 ,Address:"360 Huntington Ave, Boston, MA, 02215", Email:"susan@gmail.com")
     CustomerList.append(c1)
-    //    CustomerList.append(c2)
-    //    CustomerList.append(c3)
-    //    CustomerList.append(c4)
-    //    CustomerList.append(c5)
-    //
+    CustomerList.append(c2)
+    CustomerList.append(c3)
+    CustomerList.append(c4)
+    CustomerList.append(c5)
+    
     let m1 = Movie(Name:"Movie1", ReleaseYear: 2013, Type:MovieType.Action, Quantity:20)
-    //    let m2 = Movie(Name:"Room 2", roomType:type.Double, price:320.0)
-    //    let m3 = Movie(Name:"Romm 3", roomType:type.Double, price:175.0)
-    //    let m4 = Movie(Name:"Room 4", roomType:type.Single, price:75.0)
-    //    let m5 = Movie(Name:"Room 5", roomType:type.Single, price:60.0)
+    let m2 = Movie(Name:"Movie2", ReleaseYear: 1999, Type:MovieType.Animation, Quantity:10)
+    let m3 = Movie(Name:"Movie3", ReleaseYear: 2004, Type:MovieType.Comedy, Quantity:15)
+    let m4 = Movie(Name:"Movie4", ReleaseYear: 2015, Type:MovieType.Documentary, Quantity:26)
+    let m5 = Movie(Name:"Movie5", ReleaseYear: 2019, Type:MovieType.Musical, Quantity:29)
     MovieList.append(m1)
-    //    MovieList.append(m2)
-    //    MovieList.append(m3)
-    //    MovieList.append(m4)
-    //    MovieList.append(m5)
+    MovieList.append(m2)
+    MovieList.append(m3)
+    MovieList.append(m4)
+    MovieList.append(m5)
 }
 
 
@@ -52,7 +52,8 @@ func MovieRentalSystem(){
 
 //command line application
 InitData()
-while true {
+
+SystemLabel : while true {
     MovieRentalSystem()
     guard let option: String = readLine() ,!option.isEmpty else {
         print("Please select one option!")
@@ -61,7 +62,23 @@ while true {
     
     switch option{
     case "1" :
-        AddCustomer()
+        AddCustomerLabel: while(true){
+            AddCustomer()
+            OptionLabel: while(true){
+                print("Continue(yes) or Quit(no) \n")
+                guard let option: String = readLine() ,!option.isEmpty else {
+                    print("Please select one option!")
+                    continue OptionLabel
+                }
+                break OptionLabel
+            }
+            if(option == "yes"){
+                print(option)
+                continue AddCustomerLabel
+            }else{
+                break AddCustomerLabel
+            }
+        }
     case "2" :
         UpdateCustomer()
     case "3" :
@@ -83,9 +100,8 @@ while true {
     case "0":
         exit(0)
     default:
-        continue
+        print("Please follow the instructions \n")
+        continue SystemLabel
     }
 }
-
-
 
