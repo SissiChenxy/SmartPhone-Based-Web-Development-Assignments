@@ -22,16 +22,21 @@ func InitData(){
     CustomerList.append(c4)
     CustomerList.append(c5)
     
-    let m1 = Movie(Name:"Movie1", ReleaseYear: 2013, Type:MovieType.Action, Quantity:20)
-    let m2 = Movie(Name:"Movie2", ReleaseYear: 1999, Type:MovieType.Animation, Quantity:10)
-    let m3 = Movie(Name:"Movie3", ReleaseYear: 2004, Type:MovieType.Comedy, Quantity:15)
-    let m4 = Movie(Name:"Movie4", ReleaseYear: 2015, Type:MovieType.Documentary, Quantity:26)
-    let m5 = Movie(Name:"Movie5", ReleaseYear: 2019, Type:MovieType.Musical, Quantity:29)
+    let m1 = Movie(Name:"Movie1", ReleaseYear: 2013, Type:MovieType.Action, Quantity:3)
+    let m2 = Movie(Name:"Movie2", ReleaseYear: 1999, Type:MovieType.Animation, Quantity:2)
+    let m3 = Movie(Name:"Movie3", ReleaseYear: 2004, Type:MovieType.Comedy, Quantity:5)
+    let m4 = Movie(Name:"Movie4", ReleaseYear: 2015, Type:MovieType.Documentary, Quantity:6)
+    let m5 = Movie(Name:"Movie5", ReleaseYear: 2019, Type:MovieType.Musical, Quantity:1)
     MovieList.append(m1)
     MovieList.append(m2)
     MovieList.append(m3)
     MovieList.append(m4)
     MovieList.append(m5)
+    
+    let b1 = Booking(BookingDate: DateComponents(calendar:calendar,year:2019,month:1,day:1),ReturnDate: DateComponents(calendar:calendar,year:2019,month:1,day:5), Customer: CustomerList[0], Movie: MovieList[0], Quantity: 3)
+    let b2 = Booking(BookingDate: DateComponents(calendar:calendar,year:2019,month:3,day:4),ReturnDate: DateComponents(calendar:calendar,year:2019,month:4,day:7), Customer: CustomerList[1], Movie: MovieList[1], Quantity: 2)
+    BookingList.append(b1)
+    BookingList.append(b2)
 }
 
 
@@ -53,7 +58,7 @@ func MovieRentalSystem(){
 //command line application
 InitData()
 
-SystemLabel : while true {
+SystemLabel : while (true) {
     MovieRentalSystem()
     guard let option: String = readLine() ,!option.isEmpty else {
         print("Please select one option!")
@@ -64,39 +69,201 @@ SystemLabel : while true {
     case "1" :
         AddCustomerLabel: while(true){
             AddCustomer()
+            var choice: String = "no"
             OptionLabel: while(true){
-                print("Continue(yes) or Quit(no) \n")
-                guard let option: String = readLine() ,!option.isEmpty else {
+                print("Continue(yes), Back to Main Menu(back) or Quit(no) \n")
+                guard let choiceStr: String = readLine() ,!choiceStr.isEmpty else {
                     print("Please select one option!")
                     continue OptionLabel
                 }
+                choice = choiceStr
                 break OptionLabel
             }
-            if(option == "yes"){
-                print(option)
+            if(choice == "yes"){
                 continue AddCustomerLabel
-            }else{
+            }else if(choice == "back"){
                 break AddCustomerLabel
+            }else if(choice == "no"){
+                exit(0)
             }
         }
     case "2" :
-        UpdateCustomer()
+        UpdateCustomerLabel: while(true){
+            UpdateCustomer()
+            var choice: String = "no"
+            OptionLabel: while(true){
+                print("Continue(yes), Back to Main Menu(back) or Quit(no) \n")
+                guard let choiceStr: String = readLine() ,!choiceStr.isEmpty else {
+                    print("Please select one option!")
+                    continue OptionLabel
+                }
+                choice = choiceStr
+                break OptionLabel
+            }
+            if(choice == "yes"){
+                continue UpdateCustomerLabel
+            }else if(choice == "back"){
+                break UpdateCustomerLabel
+            }else if(choice == "no"){
+                exit(0)
+            }
+        }
     case "3" :
-        DeleteCustomer()
+        DeleteCustomerLabel: while(true){
+            DeleteCustomer()
+            var choice: String = "no"
+            OptionLabel: while(true){
+                print("Continue(yes), Back to Main Menu(back) or Quit(no) \n")
+                guard let choiceStr: String = readLine() ,!choiceStr.isEmpty else {
+                    print("Please select one option!")
+                    continue OptionLabel
+                }
+                choice = choiceStr
+                break OptionLabel
+            }
+            if(choice == "yes"){
+                continue DeleteCustomerLabel
+            }else if(choice == "back"){
+                break DeleteCustomerLabel
+            }else if(choice == "no"){
+                exit(0)
+            }
+        }
     case "4" :
         DisplayAllCustomers()
+        MainMenuLabel: while(true){
+        print("Back to main menu(yes) or quit(no) \n")
+        guard let choiceStr: String = readLine() ,!choiceStr.isEmpty else {
+            print("Please select one option!")
+            continue MainMenuLabel
+        }
+            if(choiceStr == "yes"){
+                break MainMenuLabel
+            }else{
+                exit(0)
+            }
+    }
     case "5" :
-        AddMovie()
+        AddMovieLabel: while(true){
+            AddMovie()
+            var choice: String = "no"
+            OptionLabel: while(true){
+                print("Continue(yes), Back to Main Menu(back) or Quit(no) \n")
+                guard let choiceStr: String = readLine() ,!choiceStr.isEmpty else {
+                    print("Please select one option!")
+                    continue OptionLabel
+                }
+                choice = choiceStr
+                break OptionLabel
+            }
+            if(choice == "yes"){
+                continue AddMovieLabel
+            }else if(choice == "back"){
+                break AddMovieLabel
+            }else if(choice == "no"){
+                exit(0)
+            }
+        }
     case "6":
-        UpdateMovieDetails()
+        UpdateMovieLabel: while(true){
+            UpdateMovieDetails()
+            var choice: String = "no"
+            OptionLabel: while(true){
+                print("Continue(yes), Back to Main Menu(back) or Quit(no) \n")
+                guard let choiceStr: String = readLine() ,!choiceStr.isEmpty else {
+                    print("Please select one option!")
+                    continue OptionLabel
+                }
+                choice = choiceStr
+                break OptionLabel
+            }
+            if(choice == "yes"){
+                continue UpdateMovieLabel
+            }else if(choice == "back"){
+                break UpdateMovieLabel
+            }else if(choice == "no"){
+                exit(0)
+            }
+        }
     case "7":
         ViewAllMovies()
+        MainMenuLabel: while(true){
+            print("Back to main menu(yes) or quit(no) \n")
+            guard let choiceStr: String = readLine() ,!choiceStr.isEmpty else {
+                print("Please select one option!")
+                continue MainMenuLabel
+            }
+            if(choiceStr == "yes"){
+                break MainMenuLabel
+            }else{
+                exit(0)
+            }
+        }
     case "8":
-        CreateBooking()
+        CreateBookingLabel: while(true){
+            CreateBooking()
+            var choice: String = "no"
+            OptionLabel: while(true){
+                print("Continue(yes), Back to Main Menu(back) or Quit(no) \n")
+                guard let choiceStr: String = readLine() ,!choiceStr.isEmpty else {
+                    print("Please select one option!")
+                    continue OptionLabel
+                }
+                choice = choiceStr
+                break OptionLabel
+            }
+            if(choice == "yes"){
+                continue CreateBookingLabel
+            }else if(choice == "back"){
+                break CreateBookingLabel
+            }else if(choice == "no"){
+                exit(0)
+            }
+        }
     case "9":
-        UpdateBooking()
+        
+        UpdateBookingLabel: while(true){
+            UpdateBooking()
+            var choice: String = "no"
+            OptionLabel: while(true){
+                print("Continue(yes), Back to Main Menu(back) or Quit(no) \n")
+                guard let choiceStr: String = readLine() ,!choiceStr.isEmpty else {
+                    print("Please select one option!")
+                    continue OptionLabel
+                }
+                choice = choiceStr
+                break OptionLabel
+            }
+            if(choice == "yes"){
+                continue UpdateBookingLabel
+            }else if(choice == "back"){
+                break UpdateBookingLabel
+            }else if(choice == "no"){
+                exit(0)
+            }
+        }
     case "10":
-        DeleteBooking()
+        
+        DeleteBookingLabel: while(true){
+            DeleteBooking()
+            var choice: String = "no"
+            OptionLabel: while(true){
+                print("Continue(yes), Back to Main Menu(back) or Quit(no) \n")
+                guard let choiceStr: String = readLine() ,!choiceStr.isEmpty else {
+                    print("Please select one option!")
+                    continue OptionLabel
+                }
+                choice = choiceStr
+                break OptionLabel
+            }
+            if(choice == "yes"){
+                continue DeleteBookingLabel
+            }else if(choice == "back"){
+                break DeleteBookingLabel
+            }else if(choice == "no"){
+                exit(0)
+            }
+        }
     case "0":
         exit(0)
     default:
