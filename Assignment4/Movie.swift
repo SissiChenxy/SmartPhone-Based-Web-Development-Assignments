@@ -43,29 +43,40 @@ class Movie{
 var MovieList: Array<Movie> = Array()
 
 func AddMovie(){
-    let m = Movie()
     while(true){
-        print("Movie Name: ")
-        guard let name:String = readLine(), !name.isEmpty else{
-            print("Movie name cannot be empty! \n")
-            continue
+        var name:String = ""
+        var releaseYear:Int = 0
+        var quantity:Int = 0
+        while(true){
+            print("Movie Name: ")
+            guard let nameStr:String = readLine(), !nameStr.isEmpty else{
+                print("Movie name cannot be empty! \n")
+                continue
+            }
+            name = nameStr
+            break
         }
-        m.name = name
         
-        print("Release Year: ")
-        guard let year:String = readLine(), !year.isEmpty,Int(year) != nil else{
-            print("Release Year cannot be empty! \n")
-            continue
+        while(true){
+            print("Release Year: ")
+            guard let year:String = readLine(), !year.isEmpty,Int(year) != nil else{
+                print("Release Year cannot be empty or Sting! \n")
+                continue
+            }
+            releaseYear = Int(year)!
+            break
         }
-        m.releaseYear = Int(year)!
         
-        print("Quantity: ")
-        guard let quantity:String = readLine(), !quantity.isEmpty, Int(quantity) != nil else{
-            print("Movie Quantity cannot be empty! \n")
-            continue
+        while(true){
+            print("Quantity: ")
+            guard let quantityStr:String = readLine(), !quantityStr.isEmpty, Int(quantityStr) != nil else{
+                print("Movie Quantity cannot be empty! \n")
+                continue
+            }
+            quantity = Int(quantityStr)!
+            break
         }
-        m.quantity = Int(quantity)!
-        chooseType(movie: m)
+        let m = Movie(Name: name, ReleaseYear: releaseYear, Type: chooseType(), Quantity: quantity)
         MovieList.append(m)
         print("Movie created successfully! \n")
         ViewAllMovies()
@@ -73,40 +84,44 @@ func AddMovie(){
     }
 }
 
-func chooseType(movie:Movie){
+func chooseType() -> MovieType {
+    var type:MovieType = MovieType.None
     while(true){
         print("Movie Type: 1. Action 2. Adventure 3. Animation 4.Comedy 5. Crime 6. Documentary 7. Drama 8. Historical 9. Musical 10. Fiction 11. War")
-        guard let type:String = readLine(), type=="1" || type=="2" || type=="3" || type=="4" || type=="5" || type=="6" || type=="7" || type=="8" || type=="9" || type=="10" || type=="11" else{
+        guard let typeStr:String = readLine(), typeStr=="1" || typeStr=="2" || typeStr=="3" || typeStr=="4" || typeStr=="5" || typeStr=="6" || typeStr=="7" || typeStr=="8" || typeStr=="9" || typeStr=="10" || typeStr=="11" else{
             print("Movie Type cannot be empty! \n")
             continue
         }
-        if(type=="1"){
-            movie.type = MovieType.Action
-        }else if(type == "2"){
-            movie.type = MovieType.Adventure
-        }else if(type == "3"){
-            movie.type = MovieType.Animation
-        }else if(type == "4"){
-            movie.type = MovieType.Comedy
-        }else if(type == "5"){
-            movie.type = MovieType.Crime
-        }else if(type == "6"){
-            movie.type = MovieType.Documentary
-        }else if(type == "7"){
-            movie.type = MovieType.Drama
-        }else if(type == "8"){
-            movie.type = MovieType.Historical
-        }else if(type == "9"){
-            movie.type = MovieType.Musical
-        }else if(type == "10"){
-            movie.type = MovieType.Fiction
-        }else if(type == "11"){
-            movie.type = MovieType.War
+        if(typeStr=="1"){
+            type = MovieType.Action
+        }else if(typeStr == "2"){
+            type = MovieType.Adventure
+        }else if(typeStr == "3"){
+            type = MovieType.Animation
+        }else if(typeStr == "4"){
+            type = MovieType.Comedy
+        }else if(typeStr == "5"){
+            type = MovieType.Crime
+        }else if(typeStr == "6"){
+            type = MovieType.Documentary
+        }else if(typeStr == "7"){
+            type = MovieType.Drama
+        }else if(typeStr == "8"){
+            type = MovieType.Historical
+        }else if(typeStr == "9"){
+            type = MovieType.Musical
+        }else if(typeStr == "10"){
+            type = MovieType.Fiction
+        }else if(typeStr == "11"){
+            type = MovieType.War
         }
+        break
     }
+    return type
 }
 
 func UpdateMovieDetails(){
+    ViewAllMovies()
     var targetMovie = Movie()
     while(true){
         print("Please input the name of the movie you want to update: ")
@@ -140,13 +155,13 @@ func UpdateMovieDetails(){
         case "2":
             print("Release Year: ")
             guard let yearStr:String = readLine(), !yearStr.isEmpty,Int(yearStr) != nil else{
-                print("Year cannot be empty! \n")
+                print("Year cannot be empty or String! \n")
                 continue
             }
             targetMovie.releaseYear = Int(yearStr)!
             print("Movie's Release Year changed to \(targetMovie.releaseYear) successfully! \n")
         case "3":
-            chooseType(movie:targetMovie)
+            targetMovie.type = chooseType()
             print("Movie's type changed to \(targetMovie.type) successfully! \n")
         case "4":
             print("Quantity: ")
@@ -160,18 +175,31 @@ func UpdateMovieDetails(){
             print("Please follow the instructions below \n")
             continue
         }
-        
+        break
     }
 }
 
 func ViewAllMovies(){
     if(MovieList.isEmpty){
         print("No movie in the system now! \n")
+        while(true){
+            print("Do you want to add one movie now? (yes or no)")
+            guard let option:String = readLine(), !option.isEmpty else{
+                print("Please select one option! \n")
+                continue
+            }
+            if (option == "yes"){
+                AddMovie()
+            }else{
+                break
+            }
+        }
     }else{
-        print("All Movies are here: ")
+        print("-------------------- All Movies are here --------------------")
         for Movie in MovieList{
             print("Id: \(Movie.id), Name: \(Movie.name), Release Year: \(Movie.releaseYear), Type: \(Movie.type), Quantity: \(Movie.quantity) \n")
         }
+        print("-------------------------------------------------------------")
     }
 }
 
