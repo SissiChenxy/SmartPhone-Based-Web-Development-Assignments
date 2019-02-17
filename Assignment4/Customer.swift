@@ -29,46 +29,66 @@ class Customer{
 var CustomerList: Array<Customer> = Array()
 
 func AddCustomer(){
-    let customer = Customer()
     while(true){
-        print("Name:")
-        guard let name:String = readLine(), !name.isEmpty else{
-            print("Name cannot be empty! \n")
-            continue
+        var name:String = ""
+        var age:Int = 0
+        var email:String = ""
+        var address:String = ""
+        
+        while(true){
+            print("Name:")
+            guard let nameStr:String = readLine(), !nameStr.isEmpty else{
+                print("Name cannot be empty! \n")
+                continue
+            }
+            name = nameStr
+            break
         }
-        customer.name = name
+        
+        while (true){
+            print("Age:")
+            guard let ageStr:String = readLine(),!ageStr.isEmpty, Int(ageStr) != nil else{
+                print("Age cannot be empty or String! \n")
+                continue
+            }
+            age = Int(ageStr)!
+            break
+        }
+        
+        while(true){
+            print("Email:")
+            guard let emailStr:String = readLine(), !emailStr.isEmpty else{
+                print("Email cannot be empty! \n")
+                continue
+            }
+            if(validateEmail(email: emailStr)==false){
+                print("Please input the email in the correct format \n")
+                continue
+            }
+            email = emailStr
+            break
+        }
+        while(true){
+            print("Address:")
+            guard let addressStr:String = readLine(), !addressStr.isEmpty else{
+                print("Address cannot be empty! \n")
+                continue
+            }
+            address = addressStr
+            break
+        }
+        let customer = Customer(Name: name, Age: age, Address: address, Email: email)
+        CustomerList.append(customer)
+        print("Customer: \(customer.name) created successfully! \n")
+        DisplayAllCustomers()
         break
     }
-    while(true){
-        print("Age:")
-        guard let age:String = readLine(),!age.isEmpty, Int(age) != nil else{
-            print("Age cannot be empty! \n")
-            continue
-        }
-        customer.age = Int(age)!
-        break
-    }
-    while(true){
-        print("Email:")
-        guard let email:String = readLine(), !email.isEmpty else{
-            print("Email cannot be empty! \n")
-            continue
-        }
-        customer.email = email
-        break
-    }
-    while(true){
-        print("Address:")
-        guard let address:String = readLine(), !address.isEmpty else{
-            print("Address cannot be empty! \n")
-            continue
-        }
-        customer.address = address
-        break
-    }
-    CustomerList.append(customer)
-    print("Customer: \(customer.name) created successfully! \n")
-    DisplayAllCustomers()
+}
+
+func validateEmail(email:String) -> Bool {
+    let emailRegex: String = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
+    let emailTest: NSPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+    return emailTest.evaluate(with: email)
 }
 
 func ExistedCustomer(name:String) -> Customer?{
@@ -129,6 +149,10 @@ func UpdateCustomer(){
                 print("Email cannot be empty! \n")
                 continue
             }
+            if(validateEmail(email: emailStr)==false){
+                print("Please input the email in the correct format \n")
+                continue
+            }
             targetCustomer.email = emailStr
             print("Customer's email changed to \(targetCustomer.email) successfully!")
         case "4":
@@ -155,15 +179,19 @@ func DeleteCustomer(){
             print("Name cannot be empty! \n")
             continue
         }
-        for Customer in CustomerList{
-            if(Customer.name == name){
-                CustomerList.remove(at:Customer.id-1)
-                print("Customer \(Customer.name) is deleted successfully! \n")
-            }else{
-                print("Customer doesn't exist \n")
+        if (ExistedCustomer(name: name) == nil){
+            print("Customer doesn't exist \n")
+            continue
+        }else{
+            for i in 0...CustomerList.count-1{
+                if(CustomerList[i].name == name){
+                    CustomerList.remove(at:i)
+                    print("\(name) is deleted successfully! \n")
+                    DisplayAllCustomers()
+                    break
+                }
             }
         }
-        DisplayAllCustomers()
         break
     }
 }
@@ -171,11 +199,23 @@ func DeleteCustomer(){
 func DisplayAllCustomers(){
     if(CustomerList.isEmpty){
         print("No Customer in the system now \n")
+        while(true){
+            print("Do you want to add one customer now? (yes or no)")
+            guard let option:String = readLine(), !option.isEmpty else{
+                print("Please select one option! \n")
+                continue
+            }
+            if (option == "yes"){
+                AddCustomer()
+            }else{
+                break
+            }
+        }
     }else{
-        print("All Customers are here:")
+        print("------------------ All Customers are here ---------------------")
         for Customer in CustomerList{
             print("Id: \(Customer.id), Name: \(Customer.name), Age: \(Customer.age), Email: \(Customer.email), Address: \(Customer.address) \n")
         }
+        print("----------------------------------------------------------------")
     }
 }
-
