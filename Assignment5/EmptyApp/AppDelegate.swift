@@ -12,8 +12,14 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var homeView = UIView()
-   // let customer = ManageCustomer() why initialize here will trigger a code = 2 error
+    static var homeView = UIView()
+    var customerManageView: UIView?
+    let homePage = HomePage()
+    static var homeViewRect = CGRect()
+    static var CustomerList: Array<Customer> = Array()
+    static var MovieList: Array<Movie> = Array()
+    static var BookingList: Array<Booking> = Array()
+    var calendar = Calendar(identifier:Calendar.Identifier.iso8601)
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -30,16 +36,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let screenHeight = screenSize.height
 
         //home page
-        let homeViewRect: CGRect = CGRect(x:0,y:0,width:screenWidth, height:screenHeight); //XR:1792 * 828
-        homeView = UIView(frame:homeViewRect)
-        homeView.backgroundColor = UIColor.white
-        window!.addSubview(homeView);
+        AppDelegate.homeViewRect = CGRect(x:0,y:0,width:screenWidth, height:screenHeight); //XR:1792 * 828
+        AppDelegate.homeView = UIView(frame:AppDelegate.homeViewRect)
+        AppDelegate.homeView.backgroundColor = UIColor.white
+        window!.addSubview(AppDelegate.homeView);
         
-//        print(customer.test)
-        let homePage = HomePage()
-        homePage.initHomePage(homeView: homeView,viewReact:homeViewRect)
+        initSystem()
+        homePage.initHomePage()
         
         return true
+    }
+    
+    func initSystem(){
+        let c1 = Customer(Name:"Sissi", Age:22 ,Address:"360 Huntington Ave, Boston, MA, 02215", Email:"871513123@qq.com")
+        let c2 = Customer(Name:"Nancy", Age:18 ,Address:"360 Huntington Ave, Boston, MA, 02215", Email:"nancy@gmail.com")
+        let c3 = Customer(Name:"Lily", Age:12 ,Address:"360 Huntington Ave, Boston, MA, 02215", Email:"lily@163.com")
+        let c4 = Customer(Name:"Sue", Age:29 ,Address:"360 Huntington Ave, Boston, MA, 02215", Email:"sue@gmail.com")
+        let c5 = Customer(Name:"Susan", Age:32 ,Address:"360 Huntington Ave, Boston, MA, 02215", Email:"susan@gmail.com")
+        AppDelegate.CustomerList.append(c1)
+        AppDelegate.CustomerList.append(c2)
+        AppDelegate.CustomerList.append(c3)
+        AppDelegate.CustomerList.append(c4)
+        AppDelegate.CustomerList.append(c5)
+        
+        let m1 = Movie(Name:"Movie1", ReleaseYear: 2013, Type:"Action", Quantity:5)
+        let m2 = Movie(Name:"Movie2", ReleaseYear: 1999, Type:"Animation", Quantity:3)
+        let m3 = Movie(Name:"Movie3", ReleaseYear: 2004, Type:"Comedy", Quantity:5)
+        let m4 = Movie(Name:"Movie4", ReleaseYear: 2015, Type:"Documentary", Quantity:6)
+        let m5 = Movie(Name:"Movie5", ReleaseYear: 2019, Type:"Musical", Quantity:1)
+        AppDelegate.MovieList.append(m1)
+        AppDelegate.MovieList.append(m2)
+        AppDelegate.MovieList.append(m3)
+        AppDelegate.MovieList.append(m4)
+        AppDelegate.MovieList.append(m5)
+        
+        let b1 = Booking(BookingDate: DateComponents(calendar:calendar,year:2019,month:1,day:1),ReturnDate: DateComponents(calendar:calendar,year:2019,month:1,day:5), Customer: AppDelegate.CustomerList[0], Movie: AppDelegate.MovieList[0], Quantity: 3)
+        let b2 = Booking(BookingDate: DateComponents(calendar:calendar,year:2019,month:3,day:4),ReturnDate: DateComponents(calendar:calendar,year:2019,month:4,day:7), Customer: AppDelegate.CustomerList[1], Movie: AppDelegate.MovieList[1], Quantity: 2)
+        AppDelegate.MovieList[0].quantity -= 3
+        AppDelegate.MovieList[1].quantity -= 2
+        AppDelegate.BookingList.append(b1)
+        AppDelegate.BookingList.append(b2)
     }
     
 
