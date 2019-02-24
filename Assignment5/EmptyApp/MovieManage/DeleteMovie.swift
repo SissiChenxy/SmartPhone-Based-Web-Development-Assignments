@@ -82,6 +82,7 @@ class DeleteMovie: UIView{
             alert.message = "\(name!) is deleted in the system!"
             alert.addButton(withTitle: "Got it!")
             alert.show()
+            deleteMovieView.isHidden = true
             displayMovies()
             nameInputField.text = ""
         }
@@ -101,7 +102,6 @@ class DeleteMovie: UIView{
     }
     
     @objc func displayMovies(){
-        deleteMovieView.isHidden = true
         displayMovie.initDisplayMovie()
         displayMovie.displayMovieView.isHidden = false
     }

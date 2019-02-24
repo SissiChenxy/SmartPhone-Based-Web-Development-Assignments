@@ -23,10 +23,6 @@ class DisplayMovie: UIView{
         titleLabel.font = UIFont.boldSystemFont(ofSize: 25.0)
         displayMovieView.addSubview(titleLabel)
         
-        let itemLabel: UILabel = uiCreation.createLabel(xValue: 50, yValue: 200, width: 416, height: 30, text: "Name   Year   Type    Quantity")
-        itemLabel.font = UIFont.boldSystemFont(ofSize: 20.0)
-        displayMovieView.addSubview(itemLabel)
-        
         MovieListView = UITextView(frame:(CGRect(x:50, y:230, width: 300, height: 500)))
         MovieListView.isEditable = false
         MovieListView.font = UIFont.boldSystemFont(ofSize: 18.0)
@@ -34,7 +30,12 @@ class DisplayMovie: UIView{
         //name
         var result: String = ""
         for item in AppDelegate.MovieList{
-            result = result + "\n \(item.name)    \(item.releaseYear)    \(item.type)    \(item.quantity)"
+            result += "Id: \(item.id) \n"
+            result += "Name: \(item.name) \n"
+            result += "Release Year: \(item.releaseYear) \n"
+            result += "Type: \(item.type) \n"
+            result += "Quantity: \(item.quantity) \n"
+            result += "----------------------------------- \n"
             MovieListView.text = result
         }
         displayMovieView.addSubview(MovieListView)

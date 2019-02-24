@@ -125,8 +125,14 @@ class SearchBooking:UIView{
             
         if(existed == 1 && searchList.isEmpty == false){
             var result = ""
-            for i in searchList{
-                result += "\n \(i.id)    \(i.movie!.name)        \(i.customer!.name)    \(i.quantity!)"
+            for item in searchList{
+                result += "Id: \(item.id) \n"
+                result += "Movie: \(item.movie!.name) \n"
+                result += "Customer: \(item.customer!.name) \n"
+                result += "Quantity: \(item.quantity!) \n"
+                result += "Booking From: \(item.bookingDate!.year!)-\(item.bookingDate!.month!)-\(item.bookingDate!.day!) \n"
+                result += "Booking To: \(item.returnDate!.year!)-\(item.returnDate!.month!)-\(item.returnDate!.day!) \n"
+                result += "----------------------------------- \n"
             }
             displayBooking.initDisplayBooking(result: result)
             displayBooking.displayBookingView.isHidden = false

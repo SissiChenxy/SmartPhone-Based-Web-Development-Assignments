@@ -82,6 +82,7 @@ class DeleteCustomer: UIView{
             alert.message = "\(name!) is deleted in the system!"
             alert.addButton(withTitle: "Got it!")
             alert.show()
+            deleteCustomerView.isHidden = true
             displayCustomers()
             nameInputField.text = ""
         }
@@ -101,7 +102,6 @@ class DeleteCustomer: UIView{
     }
     
     @objc func displayCustomers(){
-        deleteCustomerView.isHidden = true
         displayCustomer.initDisplayCustomer()
         displayCustomer.displayCustomerView.isHidden = false
     }

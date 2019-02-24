@@ -22,14 +22,15 @@ class DisplayCustomer: UIView{
         titleLabel.font = UIFont.boldSystemFont(ofSize: 25.0)
         displayCustomerView.addSubview(titleLabel)
         
-        let itemLabel: UILabel = uiCreation.createLabel(xValue: 50, yValue: 200, width: 300, height: 30, text: "Name    Age        Email")
-        itemLabel.font = UIFont.boldSystemFont(ofSize: 20.0)
-        displayCustomerView.addSubview(itemLabel)
-        
         //show list
         var result = ""
         for item in AppDelegate.CustomerList{
-            result += "\n \(item.name)    \(item.age)    \(item.email)"
+            result += "Id: \(item.id) \n"
+            result += "Name: \(item.name) \n"
+            result += "Age: \(item.age) \n"
+            result += "Email: \(item.email) \n"
+            result += "Address: \(item.address) \n"
+            result += "----------------------------------- \n"
         }
         customerListView = uiCreation.createTextView(xValue: 50, yValue: 230, width: 300, height: 500)
         customerListView.text = result

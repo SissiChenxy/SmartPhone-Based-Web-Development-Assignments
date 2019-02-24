@@ -75,6 +75,17 @@ class ManageBooking: UIView{
     }
     
     @objc func showDisplayBookingView() {
+        var result = ""
+        for item in AppDelegate.BookingList{
+            result += "Id: \(item.id) \n"
+            result += "Movie: \(item.movie!.name) \n"
+            result += "Customer: \(item.customer!.name) \n"
+            result += "Quantity: \(item.quantity!) \n"
+            result += "Booking From: \(item.bookingDate!.year!)-\(item.bookingDate!.month!)-\(item.bookingDate!.day!) \n"
+            result += "Booking To: \(item.returnDate!.year!)-\(item.returnDate!.month!)-\(item.returnDate!.day!) \n"
+            result += "----------------------------------- \n"
+        }
+        displayBooking.initDisplayBooking(result: result)
         displayBooking.displayBookingView.isHidden = false
     }
     
