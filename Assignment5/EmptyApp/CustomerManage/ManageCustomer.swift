@@ -37,7 +37,7 @@ class ManageCustomer : UIView{
         
         
         addCustomer.initAddCustomer()
-        displayCustomer.initDisplayCustomer()
+        //displayCustomer.initDisplayCustomer()
         deleteCustomer.initDeleteCustomer()
     }
     
@@ -63,6 +63,7 @@ class ManageCustomer : UIView{
     }
     
     @objc func showDisplayCustomerView() {
+        displayCustomer.initDisplayCustomer()
         displayCustomer.displayCustomerView.isHidden = false
     }
     

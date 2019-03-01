@@ -22,6 +22,8 @@ class AddBooking: UIView{
     var returnMonthInputField = UITextField()
     var returnDayInputField = UITextField()
     let displayBooking = DisplayBooking()
+    let displayMovieClass = DisplayMovie()
+    let displayCustomerClass = DisplayCustomer()
     
     
     func initAddBooking(){
@@ -30,7 +32,7 @@ class AddBooking: UIView{
         addBookingView.isHidden = true
         AppDelegate.homeView.addSubview(addBookingView)
         
-        let titleLabel: UILabel = uiCreation.createLabel(xValue: 80, yValue: 150, width: 300, height: 30, text: "Add Customer Details")
+        let titleLabel: UILabel = uiCreation.createLabel(xValue: 80, yValue: 150, width: 300, height: 30, text: "Add Booking Details")
         titleLabel.font = UIFont.boldSystemFont(ofSize: 25.0)
         addBookingView.addSubview(titleLabel)
         
@@ -88,8 +90,16 @@ class AddBooking: UIView{
     
         
         //add button
-        let addBtn:UIButton = createButton(xValue: 83, yValue: 756, width: 250, height: 30, title:"Add Booking", color: UIColor.brown, action: #selector(addBooking))
+        let addBtn:UIButton = createButton(xValue: 83, yValue: 666, width: 250, height: 30, title:"Add Booking", color: UIColor.brown, action: #selector(addBooking))
         addBookingView.addSubview(addBtn)
+        
+        //display movie button
+        let displayMovieBtn:UIButton = createButton(xValue: 83, yValue: 716, width: 250, height: 30, title:"Display Movie", color: UIColor.brown, action: #selector(displayMovie))
+        addBookingView.addSubview(displayMovieBtn)
+        
+        //display customer button
+        let displayCustomerBtn:UIButton = createButton(xValue: 83, yValue: 766, width: 250, height: 30, title:"Display Customer", color: UIColor.brown, action: #selector(displayCustomer))
+        addBookingView.addSubview(displayCustomerBtn)
         
         //return button
         let returnBtn:UIButton = createButton(xValue: 83, yValue: 816, width: 250, height: 30, title:"Return to Menu", color: UIColor.brown, action: #selector(returnToMenu))
@@ -106,6 +116,16 @@ class AddBooking: UIView{
         button.addTarget(self, action: action, for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: CGFloat(height-10))
         return button
+    }
+    
+    func displayMovie(){
+        displayMovieClass.initDisplayMovie()
+        displayMovieClass.displayMovieView.isHidden = false
+    }
+    
+    func displayCustomer() {
+        displayCustomerClass.initDisplayCustomer()
+        displayCustomerClass.displayCustomerView.isHidden = false
     }
     
     func addBooking(){

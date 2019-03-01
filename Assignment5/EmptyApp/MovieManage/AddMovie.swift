@@ -24,7 +24,7 @@ class AddMovie : UIView{
         addMovieView.isHidden = true
         AppDelegate.homeView.addSubview(addMovieView)
         
-        let titleLabel: UILabel = uiCreation.createLabel(xValue: 80, yValue: 150, width: 300, height: 30, text: "Add Customer Details")
+        let titleLabel: UILabel = uiCreation.createLabel(xValue: 80, yValue: 150, width: 300, height: 30, text: "Add Movie Details")
         titleLabel.font = UIFont.boldSystemFont(ofSize: 25.0)
         addMovieView.addSubview(titleLabel)
         

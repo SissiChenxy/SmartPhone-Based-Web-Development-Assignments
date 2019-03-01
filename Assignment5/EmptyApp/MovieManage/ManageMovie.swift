@@ -37,7 +37,6 @@ class ManageMovie: UIView{
         movieManageView.addSubview(backBtn)
         
         addMovie.initAddMovie()
-        displayMovie.initDisplayMovie()
         deleteMovie.initDeleteMovie()
     }
     
@@ -63,6 +62,7 @@ class ManageMovie: UIView{
     }
     
     @objc func showDisplayMovieView() {
+        displayMovie.initDisplayMovie()
         displayMovie.displayMovieView.isHidden = false
     }
     
