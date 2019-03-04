@@ -11,21 +11,46 @@ import UIKit
 class CreateCustomerViewController: UIViewController {
 
     
+    @IBOutlet weak var viewTitle: UILabel!
     @IBOutlet weak var nametxt: UITextField!
     @IBOutlet weak var agetxt: UITextField!
     @IBOutlet weak var emailtxt: UITextField!
     @IBOutlet weak var addresstxt: UITextField!
+    
+    @IBOutlet weak var createBtn: UIButton!
     @IBAction func createCustomer(_ sender: UIButton) {
         let name = nametxt.text
         let age = agetxt.text
         let email = emailtxt.text
         let address = addresstxt.text
-        if(name == "" || age == "" || email == "" || address == "" ){
+        
+        if (viewTitle.text == "Update Customer"){
+            let updateCustomerController = presentingViewController as? UpdateCustomerViewController
+            let nameParse = updateCustomerController!.nametxt.text!
+            let c = Customer.FindCustomer(name: nameParse)!
+                for item in AppDelegate.CustomerList{
+                    if(item.id == c.id){
+                        item.name = name!
+                        item.age = Int(age!)!
+                        item.email = email!
+                        item.address = address!
+                    }
+            }
+            updateCustomerController!.nametxt.text = ""
+            let alertController = UIAlertController(title: "Success:", message: "\(name!) is updated in the system!", preferredStyle: .alert)
+            let OKAction = UIAlertAction(title: "Got it!", style: .default, handler: nil)
+            alertController.addAction(OKAction)
+            self.present(alertController, animated: true, completion: nil)
+            nametxt.text = ""
+            agetxt.text = ""
+            emailtxt.text = ""
+            addresstxt.text = ""
+        }else if(name == "" || age == "" || email == "" || address == "" ){
             let alertController = UIAlertController(title: "Alert:", message: "You need to input the value!", preferredStyle: .alert)
             let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
             alertController.addAction(OKAction)
             self.present(alertController, animated: true, completion: nil)
-        }else if(Customer.ExistedCustomer(name: name!) != nil){
+        }else if(Customer.ExistedCustomer(name: name!,age: Int(age!)!,email: email!,address: address!) != nil){
             let alertController = UIAlertController(title: "Error:", message: "\(name!) is existed in the system!", preferredStyle: .alert)
             let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
             alertController.addAction(OKAction)
@@ -59,7 +84,8 @@ class CreateCustomerViewController: UIViewController {
     }
     
     @IBAction func backToPrevious(_ sender: UIButton) {
-        dismiss(animated: true, completion: nil)
+        
+            dismiss(animated: true, completion: nil)
     }
     override func viewDidLoad() {
         super.viewDidLoad()

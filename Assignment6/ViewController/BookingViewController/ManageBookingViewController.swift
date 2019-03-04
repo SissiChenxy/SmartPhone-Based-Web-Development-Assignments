@@ -25,6 +25,16 @@ class ManageBookingViewController: UIViewController {
         searchBookingController.modalTransitionStyle = .flipHorizontal
         self.present(searchBookingController, animated: true, completion: nil)
     }
+    @IBAction func updateBooking(_ sender: UIButton) {
+        let updateBookingController = UpdateBookingViewController(nibName:"UpdateBookingView",bundle:nil)
+        updateBookingController.modalTransitionStyle = .flipHorizontal
+        self.present(updateBookingController, animated: true, completion: nil)
+    }
+    @IBAction func displayBookingView(_ sender: UIButton) {
+        let displayBookingController = DisplayBookingViewController(nibName:"DisplayBookingView",bundle:nil)
+        displayBookingController.modalTransitionStyle = .flipHorizontal
+        self.present(displayBookingController, animated: true, completion: nil)
+    }
     @IBAction func returnToHome(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
     }

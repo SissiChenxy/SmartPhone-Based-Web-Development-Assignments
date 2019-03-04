@@ -25,9 +25,18 @@ class Movie{
         self.quantity = Quantity
     }
     
-    static func ExistedMovie(name:String) -> Movie?{
+    static func FindMovie(name:String) -> Movie?{
         for Movie in AppDelegate.MovieList{
             if(Movie.name==name){
+                return Movie
+            }
+        }
+        return nil
+    }
+    
+    static func ExistedMovie(name:String,year:Int,type:String,quantity:Int) -> Movie?{
+        for Movie in AppDelegate.MovieList{
+            if(Movie.name==name&&Movie.releaseYear==year&&Movie.type==type&&Movie.quantity==quantity){
                 return Movie
             }
         }

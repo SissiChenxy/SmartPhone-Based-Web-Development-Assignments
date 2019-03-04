@@ -14,7 +14,6 @@ class ViewController:
     UIViewController {
 
     @IBOutlet weak var welcomeLabel: UILabel!
-    @IBOutlet weak var manageCustomerBtn: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()

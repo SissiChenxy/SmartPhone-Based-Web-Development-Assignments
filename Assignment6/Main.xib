@@ -113,10 +113,6 @@
                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <viewLayoutGuide key="safeArea" id="dcS-Cz-ITI"/>
             </view>
-            <connections>
-                <outlet property="manageCustomerBtn" destination="VkE-cS-DyD" id="fc9-nb-1HK"/>
-                <outlet property="welcomeLabel" destination="bsT-aI-wqV" id="DAQ-6M-6Tk"/>
-            </connections>
             <point key="canvasLocation" x="586.95652173913049" y="-393.75"/>
         </viewController>
     </objects>

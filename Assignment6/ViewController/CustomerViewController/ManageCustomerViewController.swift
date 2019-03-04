@@ -21,6 +21,11 @@ class ManageCustomerViewController: UIViewController {
         deleteCustomerController.modalTransitionStyle = .flipHorizontal
         self.present(deleteCustomerController, animated: true, completion: nil)
     }
+    @IBAction func updateCustomerView(_ sender: UIButton) {
+        let updateCustomerController = UpdateCustomerViewController(nibName:"UpdateCustomerView",bundle:nil)
+        updateCustomerController.modalTransitionStyle = .flipHorizontal
+        self.present(updateCustomerController, animated: true, completion: nil)
+    }
     @IBAction func displayCustomerView(_ sender: UIButton) {
         let displayCustomerController = DisplayCustomerViewController(nibName:"DisplayCustomerView",bundle:nil)
         displayCustomerController.modalTransitionStyle = .flipHorizontal

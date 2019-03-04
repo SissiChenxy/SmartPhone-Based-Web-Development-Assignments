@@ -26,9 +26,17 @@ class Booking{
         self.returnDate = ReturnDate
     }
     
-    static func ExistedBooking(id:Int) -> Booking?{
+    static func FindBooking(id:Int) -> Booking?{
         for Booking in AppDelegate.BookingList{
             if(Booking.id==id){
+                return Booking
+            }
+        }
+        return nil
+    }
+    static func ExistedBooking(movie:String,customer:String,quantity:Int,bookingDate:DateComponents,returnDate:DateComponents) -> Booking?{
+        for Booking in AppDelegate.BookingList{
+            if(Booking.movie?.name==movie&&Booking.customer?.name==customer&&Booking.quantity==quantity&&Booking.bookingDate==bookingDate&&Booking.returnDate==returnDate){
                 return Booking
             }
         }

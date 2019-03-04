@@ -21,7 +21,12 @@ class ManageMovieViewController: UIViewController {
         deleteMovieController.modalTransitionStyle = .flipHorizontal
         self.present(deleteMovieController, animated: true, completion: nil)
     }
-    @IBAction func displayMovie(_ sender: UIButton) {
+    @IBAction func updateMovie(_ sender: UIButton) {
+        let updateMovieController = UpdateMovieViewController(nibName:"UpdateMovieView",bundle:nil)
+        updateMovieController.modalTransitionStyle = .flipHorizontal
+        self.present(updateMovieController, animated: true, completion: nil)
+    }
+    @IBAction func displayMovieView(_ sender: UIButton) {
         let displayMovieController = DisplayMovieViewController(nibName:"DisplayMovieView",bundle:nil)
         displayMovieController.modalTransitionStyle = .flipHorizontal
         self.present(displayMovieController, animated: true, completion: nil)

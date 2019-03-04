@@ -24,9 +24,18 @@ class Customer{
         self.address = Address
     }
     
-    static func ExistedCustomer(name:String) -> Customer?{
+    static func FindCustomer(name:String) -> Customer?{
         for Customer in AppDelegate.CustomerList{
             if(Customer.name==name){
+                return Customer
+            }
+        }
+        return nil
+    }
+    
+    static func ExistedCustomer(name:String,age:Int,email:String,address:String) -> Customer?{
+        for Customer in AppDelegate.CustomerList{
+            if(Customer.name==name&&Customer.age==age&&Customer.email==email&&Customer.address==address){
                 return Customer
             }
         }

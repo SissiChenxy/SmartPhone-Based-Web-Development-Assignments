@@ -18,7 +18,7 @@ class DeleteBookingViewController: UIViewController {
             let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
             alertController.addAction(OKAction)
             self.present(alertController, animated: true, completion: nil)
-        }else if(Booking.ExistedBooking(id: Int(id!)!) == nil){
+        }else if(Booking.FindBooking(id: Int(id!)!) == nil){
             let alertController = UIAlertController(title: "Error:", message: "\(id!) isn't existed in the system!", preferredStyle: .alert)
             let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
             alertController.addAction(OKAction)

@@ -14,12 +14,36 @@ class CreateMovieViewController: UIViewController {
     @IBOutlet weak var releaseYeartxt: UITextField!
     @IBOutlet weak var typetxt: UITextField!
     @IBOutlet weak var quantitytxt: UITextField!
+    @IBOutlet weak var viewTitle: UILabel!
+    
+    @IBOutlet weak var createBtn: UIButton!
+    
     @IBAction func createMovie(_ sender: UIButton) {
         let name = nametxt.text
         let year = releaseYeartxt.text
         let type = typetxt.text
         let quantity = quantitytxt.text
-        if(name == "" || year == "" || type == "" || quantity == ""){
+        if (viewTitle.text == "Update Movie"){
+            let updateMovieController = presentingViewController as? UpdateMovieViewController
+            let m = Movie.FindMovie(name: updateMovieController!.nametxt.text!)
+            for item in AppDelegate.MovieList{
+                if(item.id == m!.id){
+                    item.name = name!
+                    item.releaseYear = Int(year!)!
+                    item.type = type!
+                    item.quantity = Int(quantity!)!
+                }
+            }
+            updateMovieController!.nametxt.text = ""
+            let alertController = UIAlertController(title: "Success:", message: "\(name!) is updated in the system!", preferredStyle: .alert)
+            let OKAction = UIAlertAction(title: "Got it!", style: .default, handler: nil)
+            alertController.addAction(OKAction)
+            self.present(alertController, animated: true, completion: nil)
+            nametxt.text = ""
+            releaseYeartxt.text = ""
+            typetxt.text = ""
+            quantitytxt.text = ""
+        }else if(name == "" || year == "" || type == "" || quantity == ""){
             let alertController = UIAlertController(title: "Alert:", message: "You need to input the value!", preferredStyle: .alert)
             let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
             alertController.addAction(OKAction)
@@ -35,7 +59,7 @@ class CreateMovieViewController: UIViewController {
             if(Int(quantity!) == nil){
                 quantitytxt.text = ""
             }
-        }else if(Movie.ExistedMovie(name: name!) != nil){
+        }else if(Movie.ExistedMovie(name: name!,year: Int(year!)!,type: type!,quantity: Int(quantity!)!) != nil){
             let alertController = UIAlertController(title: "Error:", message: "\(name!) is existed in the system!", preferredStyle: .alert)
             let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
             alertController.addAction(OKAction)
@@ -55,7 +79,8 @@ class CreateMovieViewController: UIViewController {
         }
     }
     @IBAction func backToPrevious(_ sender: UIButton) {
-        dismiss(animated: true, completion: nil)
+        
+            dismiss(animated: true, completion: nil)
     }
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -16,7 +16,7 @@ class SearchBookingViewController: UIViewController {
         let name = nametxt.text
         var existed:Int = 0
         var searchList : Array<Booking> = Array()
-        if(Movie.ExistedMovie(name: name!) == nil){
+        if(Movie.FindMovie(name: name!) == nil){
             let alertController = UIAlertController(title: "Error:", message: "Movie \(name!) doesn't exist in the system!", preferredStyle: .alert)
             let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
             alertController.addAction(OKAction)
@@ -69,7 +69,7 @@ class SearchBookingViewController: UIViewController {
         let name = nametxt.text
         var existed:Int = 0
         var searchList : Array<Booking> = Array()
-        if(Customer.ExistedCustomer(name: name!) == nil){
+        if(Customer.FindCustomer(name: name!) == nil){
             let alertController = UIAlertController(title: "Error:", message: "Customer \(name!) doesn't exist in the system!", preferredStyle: .alert)
             let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
             alertController.addAction(OKAction)

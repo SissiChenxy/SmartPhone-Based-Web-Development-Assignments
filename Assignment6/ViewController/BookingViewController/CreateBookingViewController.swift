@@ -20,6 +20,8 @@ class CreateBookingViewController: UIViewController {
     @IBOutlet weak var returnyeartxt: UITextField!
     @IBOutlet weak var returnmonthtxt: UITextField!
     @IBOutlet weak var returndaytxt: UITextField!
+    @IBOutlet weak var viewTitle: UILabel!
+    @IBOutlet weak var createBtn: UIButton!
     @IBAction func createMovie(_ sender: UIButton) {
         let movie = movietxt.text
         let customer = customertxt.text
@@ -31,7 +33,34 @@ class CreateBookingViewController: UIViewController {
         let returnMonth = returnmonthtxt.text
         let returnDay = returndaytxt.text
         
-        if(movie == "" || customer == "" || quantity == "" || bookingYear == "" || bookingMonth == "" || bookingDay == "" || returnYear == "" || returnMonth == "" || returnDay == ""){
+        if (viewTitle.text == "Update Booking"){
+            let updateBookingController = presentingViewController as? UpdateBookingViewController
+            let id = updateBookingController!.idtxt.text!
+            let b = Booking.FindBooking(id: Int(id)!)
+            for item in AppDelegate.BookingList{
+                if(item.id == b!.id){
+                    item.movie = Movie.FindMovie(name:movie!)!
+                    item.customer = Customer.FindCustomer(name:customer!)!
+                    item.quantity = Int(quantity!)!
+                    item.bookingDate = DateComponents(calendar:calendar,year:Int(bookingYear!),month:Int(bookingMonth!),day:Int(bookingDay!))
+                    item.returnDate = DateComponents(calendar:calendar,year:Int(returnYear!),month:Int(returnMonth!),day:Int(returnDay!))
+                }
+            }
+            updateBookingController!.idtxt.text = ""
+            let alertController = UIAlertController(title: "Success:", message: "\(movie!) Booking for \(customer!) is updated in the system!", preferredStyle: .alert)
+            let OKAction = UIAlertAction(title: "Got it!", style: .default, handler: nil)
+            alertController.addAction(OKAction)
+            self.present(alertController, animated: true, completion: nil)
+            movietxt.text = ""
+            customertxt.text = ""
+            quantitytxt.text = ""
+            bookingyeartxt.text = ""
+            bookingmonthtxt.text = ""
+            bookingdaytxt.text = ""
+            returnyeartxt.text = ""
+            returnmonthtxt.text = ""
+            returndaytxt.text = ""
+        }else if(movie == "" || customer == "" || quantity == "" || bookingYear == "" || bookingMonth == "" || bookingDay == "" || returnYear == "" || returnMonth == "" || returnDay == ""){
             let alertController = UIAlertController(title: "Alert:", message: "You need to input the value!", preferredStyle: .alert)
             let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
             alertController.addAction(OKAction)
@@ -42,20 +71,20 @@ class CreateBookingViewController: UIViewController {
             alertController.addAction(OKAction)
             self.present(alertController, animated: true, completion: nil)
             quantitytxt.text = ""
-        }else if(Movie.ExistedMovie(name: movie!) == nil){
+        }else if(Movie.FindMovie(name: movie!) == nil){
             let alertController = UIAlertController(title: "Error:", message: "Movie \(movie!) isn't existed in the system!", preferredStyle: .alert)
             let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
             alertController.addAction(OKAction)
             self.present(alertController, animated: true, completion: nil)
             movietxt.text = ""
-        }else if(Customer.ExistedCustomer(name: customer!) == nil){
+        }else if(Customer.FindCustomer(name: customer!) == nil){
             let alertController = UIAlertController(title: "Error:", message: "Customer \(customer!) isn't existed in the system!", preferredStyle: .alert)
             let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
             alertController.addAction(OKAction)
             self.present(alertController, animated: true, completion: nil)
             customertxt.text = ""
-        }else if((Movie.ExistedMovie(name: movie!)?.quantity)! < Int(quantity!)!){
-            let alertController = UIAlertController(title: "Error:", message: "\(movie!) only has \(Movie.ExistedMovie(name: movie!)!.quantity) in the system!", preferredStyle: .alert)
+        }else if((Movie.FindMovie(name: movie!)?.quantity)! < Int(quantity!)!){
+            let alertController = UIAlertController(title: "Error:", message: "\(movie!) only has \(Movie.FindMovie(name: movie!)!.quantity) in the system!", preferredStyle: .alert)
             let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
             alertController.addAction(OKAction)
             self.present(alertController, animated: true, completion: nil)
@@ -81,9 +110,24 @@ class CreateBookingViewController: UIViewController {
             self.present(alertController, animated: true, completion: nil)
             bookingdaytxt.text = ""
             returndaytxt.text = ""
+        }else if((Booking.ExistedBooking(movie: movie!, customer: customer!, quantity: Int(quantity!)!, bookingDate: DateComponents(calendar:calendar,year:Int(bookingYear!),month:Int(bookingMonth!),day:Int(bookingDay!)), returnDate: DateComponents(calendar:calendar,year:Int(returnYear!),month:Int(returnMonth!),day:Int(returnDay!)))) != nil){
+            let alertController = UIAlertController(title: "Error:", message: "\(movie!) Booking for \(customer!) is already existed!", preferredStyle: .alert)
+            let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
+            alertController.addAction(OKAction)
+            self.present(alertController, animated: true, completion: nil)
+            movietxt.text = ""
+            customertxt.text = ""
+            quantitytxt.text = ""
+            bookingyeartxt.text = ""
+            bookingmonthtxt.text = ""
+            bookingdaytxt.text = ""
+            returnyeartxt.text = ""
+            returnmonthtxt.text = ""
+            returndaytxt.text = ""
+            
         }else{
-            let m = Movie.ExistedMovie(name: movie!)!
-            let c = Customer.ExistedCustomer(name: customer!)!
+            let m = Movie.FindMovie(name: movie!)!
+            let c = Customer.FindCustomer(name: customer!)!
             let booking = Booking(BookingDate: DateComponents(calendar:calendar,year:Int(bookingYear!),month:Int(bookingMonth!),day:Int(bookingDay!)), ReturnDate: DateComponents(calendar:calendar,year:Int(returnYear!),month:Int(returnMonth!),day:Int(returnDay!)), Customer:c , Movie:m , Quantity: Int(quantity!)!)
             m.quantity -= Int(quantity!)!
             AppDelegate.BookingList.append(booking)
@@ -114,7 +158,7 @@ class CreateBookingViewController: UIViewController {
         self.present(displayCustomerController, animated: true, completion: nil)
     }
     @IBAction func backToPrevious(_ sender: UIButton) {
-        dismiss(animated: true, completion: nil)
+            dismiss(animated: true, completion: nil)
     }
     override func viewDidLoad() {
         super.viewDidLoad()
