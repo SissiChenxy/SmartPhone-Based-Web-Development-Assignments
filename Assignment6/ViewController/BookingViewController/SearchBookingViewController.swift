@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SearchBookingViewController: UIViewController {
+class SearchBookingViewController: UIViewController,UITextFieldDelegate {
 
     @IBOutlet weak var textArea: UITextView!
     @IBOutlet weak var nametxt: UITextField!
@@ -119,9 +119,14 @@ class SearchBookingViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        nametxt.delegate = self
 
         // Do any additional setup after loading the view.
     }
+    func textFieldShouldReturn(textField: UITextField) -> Bool{
+        nametxt.resignFirstResponder()
+        return true
+        }
     
 
     /*

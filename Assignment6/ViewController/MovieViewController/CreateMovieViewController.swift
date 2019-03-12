@@ -11,9 +11,13 @@ import UIKit
 class CreateMovieViewController: UIViewController {
 
     @IBOutlet weak var nametxt: UITextField!
-    @IBOutlet weak var releaseYeartxt: UITextField!
+    @IBOutlet weak var releaseYeartxt: UITextField!{
+        didSet { releaseYeartxt?.addDoneCancelToolbar() }
+    }
     @IBOutlet weak var typetxt: UITextField!
-    @IBOutlet weak var quantitytxt: UITextField!
+    @IBOutlet weak var quantitytxt: UITextField!{
+        didSet { quantitytxt?.addDoneCancelToolbar() }
+    }
     @IBOutlet weak var viewTitle: UILabel!
     
     @IBOutlet weak var createBtn: UIButton!

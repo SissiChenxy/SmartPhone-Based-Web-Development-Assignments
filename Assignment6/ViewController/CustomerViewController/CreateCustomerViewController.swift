@@ -13,7 +13,9 @@ class CreateCustomerViewController: UIViewController {
     
     @IBOutlet weak var viewTitle: UILabel!
     @IBOutlet weak var nametxt: UITextField!
-    @IBOutlet weak var agetxt: UITextField!
+    @IBOutlet weak var agetxt: UITextField!{
+        didSet { agetxt?.addDoneCancelToolbar() }
+    }
     @IBOutlet weak var emailtxt: UITextField!
     @IBOutlet weak var addresstxt: UITextField!
     

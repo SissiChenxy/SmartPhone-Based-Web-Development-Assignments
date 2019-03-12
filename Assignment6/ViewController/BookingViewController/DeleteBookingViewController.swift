@@ -8,9 +8,11 @@
 
 import UIKit
 
-class DeleteBookingViewController: UIViewController {
+class DeleteBookingViewController: UIViewController,UITextFieldDelegate {
 
-    @IBOutlet weak var idtxt: UITextField!
+    @IBOutlet weak var idtxt: UITextField!{
+        didSet { idtxt?.addDoneCancelToolbar() }
+    }
     @IBAction func deleteBooking(_ sender: UIButton) {
         let id = idtxt.text
         if(id == ""){
@@ -49,8 +51,13 @@ class DeleteBookingViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        idtxt.delegate = self
 
         // Do any additional setup after loading the view.
+    }
+    func textFieldShouldReturn(textField: UITextField) -> Bool{
+        idtxt.resignFirstResponder()
+        return true
     }
     
 

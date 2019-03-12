@@ -8,10 +8,13 @@
 
 import UIKit
 
-class UpdateBookingViewController: UIViewController {
-    @IBOutlet weak var idtxt: UITextField!
+class UpdateBookingViewController: UIViewController,UITextFieldDelegate {
+    @IBOutlet weak var idtxt: UITextField!{
+        didSet { idtxt?.addDoneCancelToolbar() }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
+        idtxt.delegate=self
         
         // Do any additional setup after loading the view.
     }
@@ -61,7 +64,10 @@ class UpdateBookingViewController: UIViewController {
     @IBAction func backToPrevious(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
     }
-    
+    func textFieldShouldReturn(textField: UITextField) -> Bool{
+        idtxt.resignFirstResponder()
+        return true
+    }
 
     /*
     // MARK: - Navigation

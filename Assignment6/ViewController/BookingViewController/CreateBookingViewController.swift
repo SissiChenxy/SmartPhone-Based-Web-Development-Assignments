@@ -8,18 +8,32 @@
 
 import UIKit
 
-class CreateBookingViewController: UIViewController {
+class CreateBookingViewController: UIViewController,UITextFieldDelegate {
      var calendar = Calendar(identifier:Calendar.Identifier.iso8601)
 
     @IBOutlet weak var movietxt: UITextField!
     @IBOutlet weak var customertxt: UITextField!
-    @IBOutlet weak var quantitytxt: UITextField!
-    @IBOutlet weak var bookingyeartxt: UITextField!
-    @IBOutlet weak var bookingmonthtxt: UITextField!
-    @IBOutlet weak var bookingdaytxt: UITextField!
-    @IBOutlet weak var returnyeartxt: UITextField!
-    @IBOutlet weak var returnmonthtxt: UITextField!
-    @IBOutlet weak var returndaytxt: UITextField!
+    @IBOutlet weak var quantitytxt: UITextField!{
+        didSet { quantitytxt?.addDoneCancelToolbar() }
+    }
+    @IBOutlet weak var bookingyeartxt: UITextField!{
+        didSet { bookingyeartxt?.addDoneCancelToolbar() }
+    }
+    @IBOutlet weak var bookingmonthtxt: UITextField!{
+        didSet { bookingmonthtxt?.addDoneCancelToolbar() }
+    }
+    @IBOutlet weak var bookingdaytxt: UITextField!{
+        didSet { bookingdaytxt?.addDoneCancelToolbar() }
+    }
+    @IBOutlet weak var returnyeartxt: UITextField!{
+        didSet { returnyeartxt?.addDoneCancelToolbar() }
+    }
+    @IBOutlet weak var returnmonthtxt: UITextField!{
+        didSet { returnmonthtxt?.addDoneCancelToolbar() }
+    }
+    @IBOutlet weak var returndaytxt: UITextField!{
+        didSet { returndaytxt?.addDoneCancelToolbar() }
+    }
     @IBOutlet weak var viewTitle: UILabel!
     @IBOutlet weak var createBtn: UIButton!
     @IBAction func createMovie(_ sender: UIButton) {
@@ -162,10 +176,30 @@ class CreateBookingViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        movietxt.delegate = self
+        customertxt.delegate = self
+        quantitytxt.delegate = self
+        bookingyeartxt.delegate = self
+        bookingmonthtxt.delegate = self
+        bookingdaytxt.delegate = self
+        returnyeartxt.delegate = self
+        returnmonthtxt.delegate = self
+        returndaytxt.delegate = self
 
         // Do any additional setup after loading the view.
     }
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
+        movietxt.resignFirstResponder()
+        customertxt.resignFirstResponder()
+        quantitytxt.resignFirstResponder()
+        bookingyeartxt.resignFirstResponder()
+        bookingmonthtxt.resignFirstResponder()
+        bookingdaytxt.resignFirstResponder()
+        returnyeartxt.resignFirstResponder()
+        returnmonthtxt.resignFirstResponder()
+        returndaytxt.resignFirstResponder()
+        return true
+    }
 
     /*
     // MARK: - Navigation

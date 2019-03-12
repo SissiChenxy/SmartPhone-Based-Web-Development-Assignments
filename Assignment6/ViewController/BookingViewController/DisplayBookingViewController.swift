@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DisplayBookingViewController: UIViewController {
+class DisplayBookingViewController: UIViewController{
 
     @IBOutlet weak var textArea: UITextView!
     @IBAction func backToPrevious(_ sender: UIButton) {
