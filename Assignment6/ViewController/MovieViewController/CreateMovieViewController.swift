@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CreateMovieViewController: UIViewController {
+class CreateMovieViewController: UIViewController,UITextFieldDelegate {
 
     @IBOutlet weak var nametxt: UITextField!
     @IBOutlet weak var releaseYeartxt: UITextField!{
@@ -88,8 +88,20 @@ class CreateMovieViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        nametxt.delegate = self
+        releaseYeartxt.delegate = self
+        quantitytxt.delegate = self
+        typetxt.delegate = self
 
         // Do any additional setup after loading the view.
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
+        nametxt.resignFirstResponder()
+        releaseYeartxt.resignFirstResponder()
+        quantitytxt.resignFirstResponder()
+        typetxt.resignFirstResponder()
+        return true
     }
     
 

@@ -8,11 +8,11 @@
 
 import UIKit
 
-class UpdateMovieViewController: UIViewController {
+class UpdateMovieViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var nametxt: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        nametxt.delegate = self
         // Do any additional setup after loading the view.
     }
     
@@ -53,6 +53,10 @@ class UpdateMovieViewController: UIViewController {
     }
     @IBAction func backToPrevious(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
+        nametxt.resignFirstResponder()
+        return true
     }
     
     

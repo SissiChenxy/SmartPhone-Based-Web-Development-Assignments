@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DeleteMovieViewController: UIViewController {
+class DeleteMovieViewController: UIViewController,UITextFieldDelegate {
 
     @IBOutlet weak var nametxt: UITextField!
     @IBAction func deleteMovie(_ sender: UIButton) {
@@ -48,8 +48,13 @@ class DeleteMovieViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        nametxt.delegate = self
 
         // Do any additional setup after loading the view.
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
+        nametxt.resignFirstResponder()
+        return true
     }
     
 

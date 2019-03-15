@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CreateCustomerViewController: UIViewController {
+class CreateCustomerViewController: UIViewController,UITextFieldDelegate {
 
     
     @IBOutlet weak var viewTitle: UILabel!
@@ -91,6 +91,10 @@ class CreateCustomerViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        nametxt.delegate = self
+        agetxt.delegate = self
+        addresstxt.delegate = self
+        emailtxt.delegate = self
 
         // Do any additional setup after loading the view.
     }
@@ -99,6 +103,14 @@ class CreateCustomerViewController: UIViewController {
         let emailRegex: String = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
         let emailTest: NSPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
         return emailTest.evaluate(with: email)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool{
+        nametxt.resignFirstResponder()
+        agetxt.resignFirstResponder()
+        addresstxt.resignFirstResponder()
+        emailtxt.resignFirstResponder()
+        return true
     }
     
 
