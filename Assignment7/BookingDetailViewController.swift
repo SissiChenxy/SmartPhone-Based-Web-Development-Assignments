@@ -26,7 +26,7 @@ class BookingDetailViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var bookingDatetxt: UITextField!
     @IBOutlet weak var bookingDate: UIDatePicker!
     @IBAction func bookingDatePicker(_ sender: UIDatePicker) {
-        dateValue.dateFormat = "YYYY-MM-dd" // 設定要顯示在Text Field的日期時間格式
+        //dateValue.dateFormat = "YYYY-MM-dd" // 設定要顯示在Text Field的日期時間格式
         bookingDateValue = bookingDate.date.hashValue
         bookingDatetxt.text = dateValue.string(from: bookingDate.date) // 更新Text Field的內容
     }
@@ -34,7 +34,7 @@ class BookingDetailViewController: UIViewController,UITextFieldDelegate {
     @IBOutlet weak var returnDatetxt: UITextField!
     @IBOutlet weak var returnDate: UIDatePicker!
     @IBAction func returnDatePicker(_ sender: UIDatePicker) {
-        dateValue.dateFormat = "YYYY-MM-dd" // 設定要顯示在Text Field的日期時間格式
+        //dateValue.dateFormat = "YYYY-MM-dd" // 設定要顯示在Text Field的日期時間格式
         returnDateValue = returnDate.date.hashValue
         returnDatetxt.text = dateValue.string(from: returnDate.date) // 更新Text Field的內容
     }
@@ -46,6 +46,7 @@ class BookingDetailViewController: UIViewController,UITextFieldDelegate {
         movietxt.delegate = self
         customertxt.delegate = self
         quantitytxt.delegate = self
+        dateValue.dateFormat = "YYYY-MM-dd"
         // Do any additional setup after loading the view.
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -55,6 +56,11 @@ class BookingDetailViewController: UIViewController,UITextFieldDelegate {
             quantitytxt.text = String(booking.quantity!)
             bookingDatetxt.text = booking.bookingDate!
             returnDatetxt.text = booking.returnDate!
+            //dateValue.dateFormat = "YYYY-MM-dd"
+            bookingDate.setDate(dateValue.date(from: booking.bookingDate!)!, animated: false)
+            returnDate.setDate(dateValue.date(from: booking.returnDate!)!, animated: false)
+            bookingDateValue = bookingDatetxt.hashValue
+            returnDateValue = returnDatetxt.hashValue
         }
         button.setTitle(btnTitle, for:.normal)
     }
@@ -66,7 +72,9 @@ class BookingDetailViewController: UIViewController,UITextFieldDelegate {
         let bookingDate = bookingDatetxt.text
         let returnDate = returnDatetxt.text
         
-            if(movie == "" || customer == "" || quantity == "" || bookingDate == "" || returnDate == ""){
+        if((Booking.ExistedBooking(movie: movie!, customer: customer!, quantity: Int(quantity!)!, bookingDate: bookingDate!, returnDate: returnDate!)) != nil){
+            print("Booking has no changes!")
+        }else if(movie == "" || customer == "" || quantity == "" || bookingDate == "" || returnDate == ""){
                 let alertController = UIAlertController(title: "Alert:", message: "You need to input the value!", preferredStyle: .alert)
                 let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
                 alertController.addAction(OKAction)
@@ -89,13 +97,9 @@ class BookingDetailViewController: UIViewController,UITextFieldDelegate {
                 alertController.addAction(OKAction)
                 self.present(alertController, animated: true, completion: nil)
                 customertxt.text = ""
-            }else if((Movie.FindMovie(name: movie!)?.quantity)! < Int(quantity!)!){
-                let alertController = UIAlertController(title: "Error:", message: "\(movie!) only has \(Movie.FindMovie(name: movie!)!.quantity) in the system!", preferredStyle: .alert)
-                let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
-                alertController.addAction(OKAction)
-                self.present(alertController, animated: true, completion: nil)
-                quantitytxt.text = ""
             }else if(bookingDateValue >= returnDateValue){
+                print(bookingDateValue)
+                print(returnDateValue)
                 let alertController = UIAlertController(title: "Error:", message: "Booking Date must be smaller than Return Date", preferredStyle: .alert)
                 let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
                 alertController.addAction(OKAction)
@@ -103,15 +107,15 @@ class BookingDetailViewController: UIViewController,UITextFieldDelegate {
                 bookingDatetxt.text = ""
                 returnDatetxt.text = ""
             }else if(title == "Edit Booking Details"){
-                for item in AppDelegate.BookingList{
-                    if(item.id == booking.id){
-                        item.movie = Movie.FindMovie(name:movie!)!
-                        item.customer = Customer.FindCustomer(name:customer!)!
-                        item.quantity = Int(quantity!)!
-                        item.bookingDate = bookingDate!
-                        item.returnDate = returnDate!
+                    for item in AppDelegate.BookingList{
+                        if(item.id == booking.id){
+                            item.movie = Movie.FindMovie(name:movie!)!
+                            item.customer = Customer.FindCustomer(name:customer!)!
+                            item.quantity = Int(quantity!)!
+                            item.bookingDate = bookingDate!
+                            item.returnDate = returnDate!
+                        }
                     }
-                }
             }else{
                 if((Booking.ExistedBooking(movie: movie!, customer: customer!, quantity: Int(quantity!)!, bookingDate: bookingDate!, returnDate: returnDate!)) != nil){
                 let alertController = UIAlertController(title: "Error:", message: "\(movie!) Booking for \(customer!) is already existed!", preferredStyle: .alert)
@@ -119,6 +123,12 @@ class BookingDetailViewController: UIViewController,UITextFieldDelegate {
                     alertController.addAction(OKAction)
                 self.present(alertController, animated: true, completion: nil)
                     
+                }else if((Movie.FindMovie(name: movie!)?.quantity)! < Int(quantity!)!){
+                    let alertController = UIAlertController(title: "Error:", message: "\(movie!) only has \(Movie.FindMovie(name: movie!)!.quantity) in the system!", preferredStyle: .alert)
+                    let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
+                    alertController.addAction(OKAction)
+                    self.present(alertController, animated: true, completion: nil)
+                    quantitytxt.text = ""
                 }else{
                     let m = Movie.FindMovie(name: movie!)!
                     let c = Customer.FindCustomer(name: customer!)!
