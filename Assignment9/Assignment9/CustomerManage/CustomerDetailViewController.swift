@@ -7,11 +7,14 @@
 //
 
 import UIKit
+import CoreData
 
 class CustomerDetailViewController: UIViewController,UITextFieldDelegate {
     
     var customer = Customer()
     var btnTitle = ""
+    var managedContext : NSManagedObjectContext!
+    let customerService = CustomerService()
     
     @IBOutlet weak var nametxt: UITextField!
     @IBOutlet weak var agetxt: UITextField!{
@@ -27,6 +30,8 @@ class CustomerDetailViewController: UIViewController,UITextFieldDelegate {
         agetxt.delegate = self
         addresstxt.delegate = self
         emailtxt.delegate = self
+        let app = UIApplication.shared.delegate as! AppDelegate
+        managedContext = app.persistentContainer.viewContext
         
         // Do any additional setup after loading the view.
     }
@@ -64,25 +69,15 @@ class CustomerDetailViewController: UIViewController,UITextFieldDelegate {
                 self.present(alertController, animated: true, completion: nil)
                 emailtxt.text = ""
             }else if(title == "Edit Customer Details"){
-                for item in AppDelegate.CustomerList{
-                    if(item.id == customer.id){
-                        item.name = name!
-                        item.age = Int(age!)!
-                        item.email = email!
-                        item.address = address!
-                    }
-                }
+                customer.name = name!
+                customer.age = Int32(age!)!
+                customer.email = email!
+                customer.address = address!
+                customerService.saveContext(managedContext: managedContext)
             }else{
-                if(Customer.ExistedCustomer(name: name!,age: Int(age!)!,email: email!,address: address!) != nil){
-                    let alertController = UIAlertController(title: "Error:", message: "\(name!) is existed in the system!", preferredStyle: .alert)
-                    let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
-                    alertController.addAction(OKAction)
-                    self.present(alertController, animated: true, completion: nil)
-                }else{
-                    let ageInt: Int = Int(age!)!
-                    let c = Customer(Name: name!, Age: ageInt, Address: address!, Email: email!)
-                    AppDelegate.CustomerList.append(c)
-                }
+                
+                let ageInt: Int32 = Int32(age!)!
+                customerService.saveCustomer(name: name!, email: email!, age: ageInt, address: address!, managedContext: managedContext)
                 nametxt.text = ""
                 agetxt.text = ""
                 emailtxt.text = ""

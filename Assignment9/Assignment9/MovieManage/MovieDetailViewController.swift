@@ -66,8 +66,6 @@ class MovieDetailViewController: UIViewController,UITextFieldDelegate,UIImagePic
     }
     
     @IBAction func button(_ sender: UIButton) {
-        print("context")
-        print(managedContext)
         let name = nametxt.text
         let year = releaseYeartxt.text
         let type = typetxt.text
@@ -103,15 +101,14 @@ class MovieDetailViewController: UIViewController,UITextFieldDelegate,UIImagePic
                 movie.img = image.image?.jpegData(compressionQuality: 1)
                 movieService.saveContext(managedContext: managedContext)
             }else{
-                if(AppDelegate.FindMovie(movie: movie) != nil){
-                    let alertController = UIAlertController(title: "Error:", message: "\(name!) is existed in the system!", preferredStyle: .alert)
+                if(movieService.FindMovie(movie: movie) != nil){
+                    let alertController = UIAlertController(title: "Error:", message: "\(movie.name!) is existed in the system!", preferredStyle: .alert)
                     let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
                     alertController.addAction(OKAction)
                     self.present(alertController, animated: true, completion: nil)
                 }else{
                     let movieImage = image.image?.jpegData(compressionQuality: 1)
-                    let m = movieService.saveMovie(name: name!, type: type!, quantity: Int(quantity!)!, img: movieImage!, releaseYear: Int(year!)!, managedContext: managedContext)
-                    AppDelegate.MovieList.append(m)
+                    let m = movieService.saveMovie(name: name!, type: type!, quantity: Int16(quantity!)!, img: movieImage!, releaseYear: Int16(year!)!, managedContext: managedContext)
                 }
                 nametxt.text = ""
                 releaseYeartxt.text = ""

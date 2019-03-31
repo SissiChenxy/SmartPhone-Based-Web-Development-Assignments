@@ -7,19 +7,20 @@
 //
 
 import UIKit
+import CoreData
 
-class CustomerTableViewController: UITableViewController, UISearchResultsUpdating {
-
-    var filtedObjs:[Customer] = [Customer]()
-    let searchController = UISearchController(searchResultsController: nil) //if nil, use same tableview controller to show the result
+class CustomerTableViewController: UITableViewController, UISearchResultsUpdating, NSFetchedResultsControllerDelegate {
     
+    let searchController = UISearchController(searchResultsController: nil) //if nil, use same tableview controller to show the result
+    let customerService = CustomerService()
+    var searchResultsController: NSFetchedResultsController<Customer>!
+    var managedContext : NSManagedObjectContext!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.isHidden = false
         self.searchController.hidesNavigationBarDuringPresentation = false
         // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         let editButton = self.editButtonItem
@@ -33,6 +34,11 @@ class CustomerTableViewController: UITableViewController, UISearchResultsUpdatin
         searchController.searchBar.placeholder = "Type Customer's name here to search"
         navigationItem.searchController = searchController
         
+        let app = UIApplication.shared.delegate as! AppDelegate
+        managedContext = app.persistentContainer.viewContext
+        
+        searchResultsController = customerService.getCustomers(managedContext: managedContext)
+        searchResultsController.delegate = self
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -43,18 +49,20 @@ class CustomerTableViewController: UITableViewController, UISearchResultsUpdatin
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         if(isFiltering()){
-            return filtedObjs.count
+            return searchResultsController.fetchedObjects!.count
         }else{
-            return AppDelegate.CustomerList.count
+            guard let customers = customerService.getCustomers(managedContext: managedContext).fetchedObjects else {return 0}
+            return customers.count
         }
     }
     //what will be shown inside the cell
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var object = ""
         if(isFiltering()){
-            object = filtedObjs[indexPath.row].name
+            object = searchResultsController.object(at: indexPath).name!
         }else{
-            object = AppDelegate.CustomerList[indexPath.row].name
+            let customers = customerService.getCustomers(managedContext: managedContext)
+            object = customers.object(at: indexPath).name!
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomerCell", for: indexPath)
         
@@ -71,14 +79,17 @@ class CustomerTableViewController: UITableViewController, UISearchResultsUpdatin
     }
     
     func filterContentForSearchText(_ searchText: String){
+    
+        let namePredicate = NSPredicate(format: "name CONTAINS[cd] %@", searchText.lowercased())
+        let predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [namePredicate])
         
-        filtedObjs = AppDelegate.CustomerList.filter({ (customer:Customer) -> Bool in
-            if (searchController.searchBar.text?.isEmpty)! {
-                return true
-            }else {
-                return customer.name.lowercased().contains(searchText.lowercased())
-            }
-        })
+        searchResultsController!.fetchRequest.predicate = predicate
+        do {
+            try searchResultsController!.performFetch()
+        }
+        catch {
+            fatalError("Error in fetching records")
+        }
         tableView.reloadData()
     }
     
@@ -114,8 +125,30 @@ class CustomerTableViewController: UITableViewController, UISearchResultsUpdatin
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Delete the row from the data source
-            AppDelegate.CustomerList.remove(at: indexPath.row)
+            if(isFiltering()){
+                let customer = searchResultsController.object(at: indexPath)
+                managedContext.delete(customer)
+                do{
+                    try managedContext.save()
+                }catch {
+                    print("Some thing went wrong \(error.localizedDescription)")
+                }
+                do{
+                    try searchResultsController.performFetch()
+                }catch {
+                    fatalError("Error in fetching records")
+                }
+            }else{
+                // Delete the row from the data source
+                let customer = customerService.getCustomers(managedContext: managedContext).object(at: indexPath)
+                managedContext.delete(customer)
+                do{
+                    try managedContext.save()
+                }catch {
+                    print("Some thing went wrong \(error.localizedDescription)")
+                }
+            }
+            
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
@@ -146,14 +179,14 @@ class CustomerTableViewController: UITableViewController, UISearchResultsUpdatin
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
         if segue.identifier == "showCustomerDetailSegue"{
-            //let indexPath = tableView.indexPathForSelectedRow
-            let cell = sender as! UITableViewCell
-            let indexPath = tableView.indexPath(for: cell)
+            let indexPath = tableView.indexPathForSelectedRow!
+            let cus = customerService.getCustomers(managedContext: managedContext).object(at: indexPath) as! Customer
+            
             let vc = segue.destination as! CustomerDetailViewController
             vc.title = "Edit Customer Details"
             vc.btnTitle = "Save Changes"
             vc.navigationController?.isNavigationBarHidden = false
-            vc.customer = Customer.FindCustomer(name: AppDelegate.CustomerList[indexPath!.row].name)!
+            vc.customer = cus
         }
     }
 

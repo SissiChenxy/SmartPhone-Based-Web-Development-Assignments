@@ -160,7 +160,6 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <segue destination="Jpb-d7-mUz" kind="show" identifier="showCustomerDetailSegue" id="OIX-VW-L7e"/>
-                                    <segue destination="Jpb-d7-mUz" kind="show" identifier="showCustomerDetailSegue" trigger="accessoryAction" id="X8P-Ll-JQ2"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -581,7 +580,6 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <segue destination="Q2y-44-7HL" kind="show" identifier="showMovieDetailSegue" id="BqW-8a-Jtv"/>
-                                    <segue destination="Q2y-44-7HL" kind="show" identifier="showMovieDetailSegue" trigger="accessoryAction" id="gY7-ua-uxf"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -763,8 +761,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="gY7-ua-uxf"/>
         <segue reference="Jel-tD-NzI"/>
-        <segue reference="OIX-VW-L7e"/>
     </inferredMetricsTieBreakers>
 </document>

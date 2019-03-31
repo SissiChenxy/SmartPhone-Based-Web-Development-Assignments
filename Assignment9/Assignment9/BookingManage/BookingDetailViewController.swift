@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class BookingDetailViewController: UIViewController,UITextFieldDelegate,UIPickerViewDataSource, UIPickerViewDelegate {
     
@@ -14,8 +15,12 @@ class BookingDetailViewController: UIViewController,UITextFieldDelegate,UIPicker
     var btnTitle = ""
     var bookingDateValue = 0
     var returnDateValue = 0
-    var dateValue = DateFormatter()
-    //dateValue.dateFormat = "YYYY MM dd" // 调用别的函数不能写在class里面
+    var dateFormatter = DateFormatter()
+    let movieService = MovieService()
+    let customerService = CustomerService()
+    let bookingService = BookingService()
+
+    var managedContext : NSManagedObjectContext!
     
     
     @IBOutlet weak var movietxt: UITextField!
@@ -27,17 +32,16 @@ class BookingDetailViewController: UIViewController,UITextFieldDelegate,UIPicker
     @IBOutlet weak var bookingDatetxt: UITextField!
     @IBOutlet weak var bookingDate: UIDatePicker!
     @IBAction func bookingDatePicker(_ sender: UIDatePicker) {
-        //dateValue.dateFormat = "YYYY-MM-dd" // 設定要顯示在Text Field的日期時間格式
+        //dateFormatter.dateFormat = "YYYY-MM-dd" // 設定要顯示在Text Field的日期時間格式
         bookingDateValue = bookingDate.date.hashValue
-        bookingDatetxt.text = dateValue.string(from: bookingDate.date) // 更新Text Field的內容
+        bookingDatetxt.text = dateFormatter.string(from: bookingDate.date) // 更新Text Field的內容
     }
     
     @IBOutlet weak var returnDatetxt: UITextField!
     @IBOutlet weak var returnDate: UIDatePicker!
     @IBAction func returnDatePicker(_ sender: UIDatePicker) {
-        //dateValue.dateFormat = "YYYY-MM-dd" // 設定要顯示在Text Field的日期時間格式
         returnDateValue = returnDate.date.hashValue
-        returnDatetxt.text = dateValue.string(from: returnDate.date) // 更新Text Field的內容
+        returnDatetxt.text = dateFormatter.string(from: returnDate.date) // 更新Text Field的內容
     }
     
     @IBOutlet weak var button: UIButton!
@@ -45,25 +49,27 @@ class BookingDetailViewController: UIViewController,UITextFieldDelegate,UIPicker
     override func viewDidLoad() {
         super.viewDidLoad()
         quantitytxt.delegate = self
-        dateValue.dateFormat = "YYYY-MM-dd"
-        moviecustomerpicker.dataSource = self as! UIPickerViewDataSource
+        dateFormatter.dateFormat = "YYYY-MM-dd"
+        moviecustomerpicker.dataSource = self as UIPickerViewDataSource
         moviecustomerpicker.delegate = self as! UIPickerViewDelegate
         // Do any additional setup after loading the view.
         moviecustomerpicker.selectRow(0,inComponent:0,animated:true)
         moviecustomerpicker.selectRow(0,inComponent:1,animated:true)
         moviecustomerpicker.reloadAllComponents()
 
+        let app = UIApplication.shared.delegate as! AppDelegate
+        managedContext = app.persistentContainer.viewContext
     }
     override func viewDidAppear(_ animated: Bool) {
         if(title == "Edit Booking Details"){
             movietxt.text = booking.movie?.name
             customertxt.text = booking.customer?.name
-            quantitytxt.text = String(booking.quantity!)
-            bookingDatetxt.text = booking.bookingDate!
-            returnDatetxt.text = booking.returnDate!
-            //dateValue.dateFormat = "YYYY-MM-dd"
-            bookingDate.setDate(dateValue.date(from: booking.bookingDate!)!, animated: false)
-            returnDate.setDate(dateValue.date(from: booking.returnDate!)!, animated: false)
+            quantitytxt.text = String(booking.quantity)
+            bookingDatetxt.text = dateFormatter.string(from: booking.bookingDate!)
+            returnDatetxt.text = dateFormatter.string(from: booking.returnDate!)
+        
+            bookingDate.setDate(dateFormatter.date(from: bookingDatetxt.text!)!, animated: false)
+            returnDate.setDate(dateFormatter.date(from: returnDatetxt.text!)!, animated: false)
             bookingDateValue = bookingDatetxt.hashValue
             returnDateValue = returnDatetxt.hashValue
         }
@@ -78,69 +84,68 @@ class BookingDetailViewController: UIViewController,UITextFieldDelegate,UIPicker
     //行数
     func pickerView(_ moviecustomerpicker: UIPickerView,
                     numberOfRowsInComponent component: Int) -> Int {
+        let app = UIApplication.shared.delegate as! AppDelegate
+        managedContext = app.persistentContainer.viewContext
         if 0 == component {
-            return AppDelegate.MovieList.count
+            return movieService.getMovies(managedContext: managedContext).count
         }else {
-            return AppDelegate.CustomerList.count
+            guard let customers = customerService.getCustomers(managedContext: managedContext).fetchedObjects else {return 0}
+            return customers.count
         }
     }
     
     //内容
     func pickerView(_ moviecustomerpicker: UIPickerView, titleForRow row: Int,
                     forComponent component: Int) -> String? {
+        let app = UIApplication.shared.delegate as! AppDelegate
+        managedContext = app.persistentContainer.viewContext
         if 0 == component {
-            return AppDelegate.MovieList[row].name
+            return movieService.getMovies(managedContext: managedContext)[row].name
         }else {
-            return AppDelegate.CustomerList[row].name
+            return customerService.getCustomers(managedContext: managedContext).fetchedObjects![row].name
         }
     }
     
     func pickerView(_ moviecustomerpicker: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     {
         if 0 == component {
-            print("111111111")
-            movietxt.text = AppDelegate.MovieList[moviecustomerpicker.selectedRow(inComponent: 0)].name
+            movietxt.text = movieService.movieList[moviecustomerpicker.selectedRow(inComponent: 0)].name
         }else {
-            customertxt.text = AppDelegate.CustomerList[moviecustomerpicker.selectedRow(inComponent: 1)].name
-            print(customertxt.text)
+            let customerList = customerService.getCustomers(managedContext: managedContext).fetchedObjects
+            customertxt.text = customerList![moviecustomerpicker.selectedRow(inComponent: 1)].name
         }
     }
     
     @IBAction func button(_ sender: UIButton) {
         let mid = moviecustomerpicker.selectedRow(inComponent: 0)
-        let movie = AppDelegate.MovieList[mid].name
-        print(movie)
-        let cid = moviecustomerpicker.selectedRow(inComponent: 1)
-        let customer = AppDelegate.CustomerList[cid].name
-        print(customer)
-        let quantity = quantitytxt.text
-        let bookingDate = bookingDatetxt.text
-        let returnDate = returnDatetxt.text
+        let movie = movieService.movieList[mid]
         
-        if(movie == "" || customer == "" || quantity == "" || bookingDate == "" || returnDate == ""){
+        let cid = moviecustomerpicker.selectedRow(inComponent: 1)
+        let customer = customerService.getCustomers(managedContext: managedContext).fetchedObjects![cid]
+        let quantity = quantitytxt.text
+        let bookingDateStr = bookingDatetxt.text
+        let bookingDate = dateFormatter.date(from: bookingDateStr!)
+        let returnDateStr = returnDatetxt.text
+        let returnDate = dateFormatter.date(from: returnDateStr!)
+        
+        if(movie == nil || customer == nil || quantity == "" || bookingDateStr == "" || returnDateStr == ""){
                 let alertController = UIAlertController(title: "Alert:", message: "You need to input the value!", preferredStyle: .alert)
                 let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
                 alertController.addAction(OKAction)
                 self.present(alertController, animated: true, completion: nil)
-            }else if(Int(quantity!) == nil){
+        }else if(Int(quantity!) == nil){
                 let alertController = UIAlertController(title: "Error:", message: "The quantity should be Integer!", preferredStyle: .alert)
                 let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
                 alertController.addAction(OKAction)
                 self.present(alertController, animated: true, completion: nil)
                 quantitytxt.text = ""
-        }else if(Movie.FindMovie(name: movie) == nil){
-            let alertController = UIAlertController(title: "Error:", message: "Movie \(movie) isn't existed in the system!", preferredStyle: .alert)
-                let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
-                alertController.addAction(OKAction)
-                self.present(alertController, animated: true, completion: nil)
-                movietxt.text = ""
-        }else if(Customer.FindCustomer(name: customer) == nil){
-            let alertController = UIAlertController(title: "Error:", message: "Customer \(customer) isn't existed in the system!", preferredStyle: .alert)
-                let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
-                alertController.addAction(OKAction)
-                self.present(alertController, animated: true, completion: nil)
-                customertxt.text = ""
-            }else if(bookingDateValue >= returnDateValue){
+        }else if((movieService.FindMovie(movie: movie)?.quantity)! < Int16(quantity!)!){
+            let alertController = UIAlertController(title: "Error:", message: "\(movie) only has \(movie.quantity) in the system!", preferredStyle: .alert)
+            let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
+            alertController.addAction(OKAction)
+            self.present(alertController, animated: true, completion: nil)
+            quantitytxt.text = ""
+        }else if(bookingDateValue >= returnDateValue){
                 print(bookingDateValue)
                 print(returnDateValue)
                 let alertController = UIAlertController(title: "Error:", message: "Booking Date must be smaller than Return Date", preferredStyle: .alert)
@@ -149,40 +154,23 @@ class BookingDetailViewController: UIViewController,UITextFieldDelegate,UIPicker
                 self.present(alertController, animated: true, completion: nil)
                 bookingDatetxt.text = ""
                 returnDatetxt.text = ""
-            }else if(title == "Edit Booking Details"){
-                    for item in AppDelegate.BookingList{
-                        if(item.id == booking.id){
-                            item.movie = Movie.FindMovie(name:movie)!
-                            item.customer = Customer.FindCustomer(name:customer)!
-                            item.quantity = Int(quantity!)!
-                            item.bookingDate = bookingDate!
-                            item.returnDate = returnDate!
-                        }
-                    }
+        }else{
+            if(title == "Edit Booking Details"){
+                booking.movie = movie
+                booking.customer = customer
+                booking.quantity = Int16(quantity!)!
+                booking.bookingDate = bookingDate!
+                booking.returnDate = returnDate!
+                bookingService.saveContext(managedContext: managedContext)
+                print(bookingDateValue)
+                print(returnDateValue)
             }else{
-            if((Booking.ExistedBooking(movie: movie, customer: customer, quantity: Int(quantity!)!, bookingDate: bookingDate!, returnDate: returnDate!)) != nil){
-                let alertController = UIAlertController(title: "Error:", message: "\(movie) Booking for \(customer) is already existed!", preferredStyle: .alert)
-                let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
-                    alertController.addAction(OKAction)
-                self.present(alertController, animated: true, completion: nil)
-                    
-            }else if((Movie.FindMovie(name: movie)?.quantity)! < Int(quantity!)!){
-                let alertController = UIAlertController(title: "Error:", message: "\(movie) only has \(Movie.FindMovie(name: movie)!.quantity) in the system!", preferredStyle: .alert)
-                    let OKAction = UIAlertAction(title: "Edit it!", style: .default, handler: nil)
-                    alertController.addAction(OKAction)
-                    self.present(alertController, animated: true, completion: nil)
-                    quantitytxt.text = ""
-                }else{
-                    let m = Movie.FindMovie(name: movie)!
-                let c = Customer.FindCustomer(name: customer)!
-                    let booking = Booking(BookingDate: bookingDate!, ReturnDate: returnDate!, Customer:c , Movie:m , Quantity: Int(quantity!)!)
-                    m.quantity -= Int(quantity!)!
-                    AppDelegate.BookingList.append(booking)
-                }
-                quantitytxt.text = ""
-                bookingDatetxt.text = ""
-                returnDatetxt.text = ""
+                bookingService.saveBooking(movie: movie, customer: customer, quantity: Int16(quantity!)!, bookingDate: bookingDate!, returnDate: returnDate!, managedContext: managedContext)
             }
+        }
+            quantitytxt.text = ""
+            bookingDatetxt.text = ""
+            returnDatetxt.text = ""
         self.navigationController?.popViewController(animated: true)
         }
     

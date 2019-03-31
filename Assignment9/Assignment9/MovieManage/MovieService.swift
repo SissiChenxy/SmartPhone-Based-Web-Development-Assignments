@@ -11,14 +11,7 @@ import UIKit
 import CoreData
 
 class MovieService {
-    
-//    var managedObjectContext:NSManagedObjectContext!
-//    var movieEntity:NSEntityDescription!
-    
-//    init(){
-//        let app = UIApplication.shared.delegate as! AppDelegate
-//        //managedContext = app.persistentContainer.viewContext
-//    }
+    var movieList : [Movie] = [Movie]()
     
     func getMovies(managedContext:NSManagedObjectContext) -> [Movie]{
         
@@ -27,27 +20,36 @@ class MovieService {
         fetchRequest.sortDescriptors = [sortName]
         
         do{
-            AppDelegate.MovieList = try managedContext.fetch(fetchRequest) as! [Movie]
+            movieList = try managedContext.fetch(fetchRequest) as! [Movie]
         }catch let error as NSError{
             print("Error :\(error.userInfo)")
         }
         
-        return AppDelegate.MovieList
+        return movieList
     }
     
-    func saveMovie(name:String,type:String,quantity:Int,img:Data,releaseYear:Int,managedContext:NSManagedObjectContext) -> Movie{
+    func saveMovie(name:String,type:String,quantity:Int16,img:Data,releaseYear:Int16,managedContext:NSManagedObjectContext) -> Movie{
         
         //let movie = NSEntityDescription.insertNewObject(forEntityName: "Movie", into: managedContext) as! Movie
         let movieEntity = NSEntityDescription.entity(forEntityName: "Movie", in: managedContext)
         let movie = NSManagedObject.init(entity: movieEntity!, insertInto: managedContext)
         movie.setValue(name, forKey: "name")
         movie.setValue(type, forKey: "type")
-        movie.setValue(Int16(quantity), forKey: "quantity")
+        movie.setValue(quantity, forKey: "quantity")
         movie.setValue(img, forKey: "img")
-        movie.setValue(Int16(releaseYear), forKey: "releaseYear")
+        movie.setValue(releaseYear, forKey: "releaseYear")
         
         saveContext(managedContext: managedContext)
         return movie as! Movie
+    }
+    
+    func FindMovie(movie:Movie) -> Movie?{
+        for Movie in movieList{
+            if(Movie == movie){
+                return Movie
+            }
+        }
+        return nil
     }
     
     func saveContext (managedContext:NSManagedObjectContext) {

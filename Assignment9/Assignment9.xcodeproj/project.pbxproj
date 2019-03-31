@@ -22,6 +22,13 @@
 		2370401F224EAB3300EE15B3 /* superman.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2370401A224EAB3300EE15B3 /* superman.jpg */; };
 		23704020224EAB3300EE15B3 /* bohemian.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 2370401B224EAB3300EE15B3 /* bohemian.jpg */; };
 		23704021224EAB3300EE15B3 /* aquaman.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 2370401C224EAB3300EE15B3 /* aquaman.jpeg */; };
+		2370402922503C0D00EE15B3 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2370402822503C0D00EE15B3 /* CustomButton.swift */; };
+		2370403222503C8D00EE15B3 /* CustomerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2370403022503C8D00EE15B3 /* CustomerTableViewController.swift */; };
+		2370403322503C8D00EE15B3 /* CustomerDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2370403122503C8D00EE15B3 /* CustomerDetailViewController.swift */; };
+		2370403522503D5F00EE15B3 /* CustomerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2370403422503D5F00EE15B3 /* CustomerService.swift */; };
+		2370403922507E7300EE15B3 /* BookingDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2370403722507E7300EE15B3 /* BookingDetailViewController.swift */; };
+		2370403A22507E7300EE15B3 /* BookingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2370403822507E7300EE15B3 /* BookingTableViewController.swift */; };
+		2370403C22507E8600EE15B3 /* BookingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2370403B22507E8600EE15B3 /* BookingService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +49,13 @@
 		2370401A224EAB3300EE15B3 /* superman.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = superman.jpg; sourceTree = "<group>"; };
 		2370401B224EAB3300EE15B3 /* bohemian.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = bohemian.jpg; sourceTree = "<group>"; };
 		2370401C224EAB3300EE15B3 /* aquaman.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = aquaman.jpeg; sourceTree = "<group>"; };
+		2370402822503C0D00EE15B3 /* CustomButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
+		2370403022503C8D00EE15B3 /* CustomerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomerTableViewController.swift; sourceTree = "<group>"; };
+		2370403122503C8D00EE15B3 /* CustomerDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomerDetailViewController.swift; sourceTree = "<group>"; };
+		2370403422503D5F00EE15B3 /* CustomerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomerService.swift; sourceTree = "<group>"; };
+		2370403722507E7300EE15B3 /* BookingDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookingDetailViewController.swift; sourceTree = "<group>"; };
+		2370403822507E7300EE15B3 /* BookingTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookingTableViewController.swift; sourceTree = "<group>"; };
+		2370403B22507E8600EE15B3 /* BookingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,15 +88,18 @@
 		23703FF7224D231300EE15B3 /* Assignment9 */ = {
 			isa = PBXGroup;
 			children = (
-				23704017224EAB3300EE15B3 /* image */,
+				2370403622507E7300EE15B3 /* BookingManage */,
+				2370402F22503C8D00EE15B3 /* CustomerManage */,
 				2370400E224DB07500EE15B3 /* MovieManage */,
 				23703FF8224D231300EE15B3 /* AppDelegate.swift */,
+				23704017224EAB3300EE15B3 /* image */,
 				23703FFA224D231300EE15B3 /* ViewController.swift */,
 				23703FFC224D231300EE15B3 /* Main.storyboard */,
 				23704002224D231400EE15B3 /* Assets.xcassets */,
 				23704004224D231400EE15B3 /* LaunchScreen.storyboard */,
 				23704007224D231400EE15B3 /* Info.plist */,
 				23703FFF224D231300EE15B3 /* Assignment9.xcdatamodeld */,
+				2370402822503C0D00EE15B3 /* CustomButton.swift */,
 				23704013224E78D200EE15B3 /* UITextfield+Extentions.swift */,
 			);
 			path = Assignment9;
@@ -108,6 +125,26 @@
 				2370401C224EAB3300EE15B3 /* aquaman.jpeg */,
 			);
 			path = image;
+			sourceTree = "<group>";
+		};
+		2370402F22503C8D00EE15B3 /* CustomerManage */ = {
+			isa = PBXGroup;
+			children = (
+				2370403022503C8D00EE15B3 /* CustomerTableViewController.swift */,
+				2370403122503C8D00EE15B3 /* CustomerDetailViewController.swift */,
+				2370403422503D5F00EE15B3 /* CustomerService.swift */,
+			);
+			path = CustomerManage;
+			sourceTree = "<group>";
+		};
+		2370403622507E7300EE15B3 /* BookingManage */ = {
+			isa = PBXGroup;
+			children = (
+				2370403722507E7300EE15B3 /* BookingDetailViewController.swift */,
+				2370403822507E7300EE15B3 /* BookingTableViewController.swift */,
+				2370403B22507E8600EE15B3 /* BookingService.swift */,
+			);
+			path = BookingManage;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -187,12 +224,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				23704011224DB07500EE15B3 /* MovieTableViewController.swift in Sources */,
+				2370403922507E7300EE15B3 /* BookingDetailViewController.swift in Sources */,
+				2370403322503C8D00EE15B3 /* CustomerDetailViewController.swift in Sources */,
+				2370403C22507E8600EE15B3 /* BookingService.swift in Sources */,
 				23704012224DB07500EE15B3 /* MovieDetailViewController.swift in Sources */,
 				23704001224D231300EE15B3 /* Assignment9.xcdatamodeld in Sources */,
+				2370403522503D5F00EE15B3 /* CustomerService.swift in Sources */,
 				23703FFB224D231300EE15B3 /* ViewController.swift in Sources */,
+				2370402922503C0D00EE15B3 /* CustomButton.swift in Sources */,
 				23704014224E78D200EE15B3 /* UITextfield+Extentions.swift in Sources */,
+				2370403A22507E7300EE15B3 /* BookingTableViewController.swift in Sources */,
 				23703FF9224D231300EE15B3 /* AppDelegate.swift in Sources */,
 				23704016224EA99400EE15B3 /* MovieService.swift in Sources */,
+				2370403222503C8D00EE15B3 /* CustomerTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

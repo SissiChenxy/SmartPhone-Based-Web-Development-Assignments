@@ -7,11 +7,15 @@
 //
 
 import UIKit
+import CoreData
 
-class BookingTableViewController: UITableViewController, UISearchResultsUpdating {
+class BookingTableViewController: UITableViewController, UISearchResultsUpdating,NSFetchedResultsControllerDelegate {
 
     var filtedObjs:[Booking] = [Booking]()
+    var managedContext : NSManagedObjectContext!
     let searchController = UISearchController(searchResultsController: nil) //if nil, use same tableview controller to show the result
+    var searchResultsController: NSFetchedResultsController<Booking>!
+    let bookingService = BookingService()
     
     
     override func viewDidLoad() {
@@ -35,6 +39,10 @@ class BookingTableViewController: UITableViewController, UISearchResultsUpdating
         searchController.searchBar.placeholder = "Type Movie's or Customer's name here"
         navigationItem.searchController = searchController
         
+        let app = UIApplication.shared.delegate as! AppDelegate
+        managedContext = app.persistentContainer.viewContext
+        searchResultsController = bookingService.getBookings(managedContext: managedContext)
+        searchResultsController.delegate = self
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -45,21 +53,24 @@ class BookingTableViewController: UITableViewController, UISearchResultsUpdating
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         if(isFiltering()){
-            return filtedObjs.count
+            return searchResultsController.fetchedObjects!.count
         }else{
-            return AppDelegate.BookingList.count
+            guard let bookings = bookingService.getBookings(managedContext: managedContext).fetchedObjects else {return 0}
+            return bookings.count
         }
     }
     //what will be shown inside the cell
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         var object = ""
         var subtitle = ""
         if(isFiltering()){
-            object = (filtedObjs[indexPath.row].movie?.name)! + " " + String(filtedObjs[indexPath.row].quantity!)
-            subtitle = (filtedObjs[indexPath.row].customer?.name)!
+            object = searchResultsController.object(at: indexPath).movie!.name!
+            subtitle = searchResultsController.object(at: indexPath).customer!.name!
         }else{
-            object = (AppDelegate.BookingList[indexPath.row].movie?.name)! + " " +  String(AppDelegate.BookingList[indexPath.row].quantity!)
-            subtitle = (AppDelegate.BookingList[indexPath.row].customer?.name)!
+            let booking = bookingService.getBookings(managedContext: managedContext).object(at: indexPath)
+            object = booking.movie!.name!
+            subtitle = booking.customer!.name!
         }
         let cell = tableView.dequeueReusableCell(withIdentifier: "BookingCell", for: indexPath)
         
@@ -78,13 +89,16 @@ class BookingTableViewController: UITableViewController, UISearchResultsUpdating
     
     func filterContentForSearchText(_ searchText: String){
         
-        filtedObjs = AppDelegate.BookingList.filter({ (Booking:Booking) -> Bool in
-            if (searchController.searchBar.text?.isEmpty)! {
-                return true
-            }else {
-                return Booking.movie!.name.lowercased().contains(searchText.lowercased()) || (Booking.customer!.name).lowercased().contains(searchText.lowercased())
-            }
-        })
+        let namePredicate = NSPredicate(format: "movie CONTAINS[cd] %@ OR customer CONTAINS[cd] %@ ", searchText.lowercased())
+        let predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [namePredicate])
+        
+        searchResultsController!.fetchRequest.predicate = predicate
+        do {
+            try searchResultsController!.performFetch()
+        }
+        catch {
+            fatalError("Error in fetching records")
+        }
         tableView.reloadData()
     }
     
@@ -122,7 +136,30 @@ class BookingTableViewController: UITableViewController, UISearchResultsUpdating
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
-            AppDelegate.BookingList.remove(at: indexPath.row)
+            if(isFiltering()){
+                let booking = searchResultsController.object(at: indexPath)
+                managedContext.delete(booking)
+                do{
+                    try managedContext.save()
+                }catch {
+                    print("Some thing went wrong \(error.localizedDescription)")
+                }
+                do{
+                    try searchResultsController.performFetch()
+                }catch {
+                    fatalError("Error in fetching records")
+                }
+            }else{
+                // Delete the row from the data source
+                let booking = bookingService.getBookings(managedContext: managedContext).object(at: indexPath)
+                managedContext.delete(booking)
+                do{
+                    try managedContext.save()
+                }catch {
+                    print("Some thing went wrong \(error.localizedDescription)")
+                }
+            }
+            
             tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
@@ -159,7 +196,8 @@ class BookingTableViewController: UITableViewController, UISearchResultsUpdating
             let vc = segue.destination as! BookingDetailViewController
             vc.title = "Edit Booking Details"
             vc.btnTitle = "Save Changes"
-            vc.booking = Booking.FindBooking(id: AppDelegate.MovieList[indexPath!.row].id)!
+            let booking = bookingService.getBookings(managedContext: managedContext).object(at: indexPath!) as! Booking
+            vc.booking = booking
         }
     }
 }

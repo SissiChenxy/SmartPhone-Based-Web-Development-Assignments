@@ -16,7 +16,7 @@ class MovieTableViewController: UITableViewController, UISearchResultsUpdating,N
     
     var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     var managedContext : NSManagedObjectContext!
-    var movieEntity: NSEntityDescription!
+    //var movieEntity: NSEntityDescription!
     let movieService = MovieService()
     
     
@@ -41,7 +41,7 @@ class MovieTableViewController: UITableViewController, UISearchResultsUpdating,N
         
         let app = UIApplication.shared.delegate as! AppDelegate
         managedContext = app.persistentContainer.viewContext
-        movieEntity = NSEntityDescription.entity(forEntityName: "Movie", in: managedContext)
+        //movieEntity = NSEntityDescription.entity(forEntityName: "Movie", in: managedContext)
     
         movieService.getMovies(managedContext: managedContext)
     }
@@ -70,9 +70,9 @@ class MovieTableViewController: UITableViewController, UISearchResultsUpdating,N
             subtitle = String(filtedObjs[indexPath.row].releaseYear)
             image = UIImage(data:filtedObjs[indexPath.row].img!)!
         }else{
-            object = AppDelegate.MovieList[indexPath.row].name!
-            subtitle = String(AppDelegate.MovieList[indexPath.row].releaseYear)
-            image = UIImage(data: AppDelegate.MovieList[indexPath.row].img!)!
+            object = movieService.movieList[indexPath.row].name!
+            subtitle = String(movieService.movieList[indexPath.row].releaseYear)
+            image = UIImage(data: movieService.movieList[indexPath.row].img!)!
         }
         
         cell.textLabel?.text = object
@@ -91,7 +91,7 @@ class MovieTableViewController: UITableViewController, UISearchResultsUpdating,N
     
     func filterContentForSearchText(_ searchText: String){
         
-        filtedObjs = AppDelegate.MovieList.filter({ (Movie:Movie) -> Bool in
+        filtedObjs = movieService.movieList.filter({ (Movie:Movie) -> Bool in
             if (searchController.searchBar.text?.isEmpty)! {
                 return true
             }else {
@@ -134,15 +134,17 @@ class MovieTableViewController: UITableViewController, UISearchResultsUpdating,N
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
-            AppDelegate.MovieList.remove(at: indexPath.row)
-            let movie = AppDelegate.MovieList[indexPath.row]
-            managedContext.delete(movie)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-            do{
-                try managedContext.save()
-            }catch {
-                print("Some thing went wrong \(error.localizedDescription)")
+            
+            if(isFiltering()){
+                filtedObjs.remove(at: indexPath.row)
+                movieService.movieList = movieService.getMovies(managedContext: managedContext)
+            }else{
+                movieService.movieList.remove(at: indexPath.row)
+                let movie = movieService.getMovies(managedContext: managedContext)[indexPath.row]
+                managedContext.delete(movie)
             }
+            movieService.saveContext(managedContext: managedContext)
+            tableView.deleteRows(at: [indexPath], with: .fade)
         } else if editingStyle == .insert {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
@@ -178,7 +180,7 @@ class MovieTableViewController: UITableViewController, UISearchResultsUpdating,N
             let vc = segue.destination as! MovieDetailViewController
             vc.title = "Edit Movie Details"
             vc.btnTitle = "Save Changes"
-            vc.movie = AppDelegate.MovieList[indexPath!.row].self
+            vc.movie = movieService.movieList[indexPath!.row].self
         }
     }
 }
